@@ -125,6 +125,9 @@ def write_wrapper(model_path, file_name, instances):
                 f.write(') "Original model with overwrites";\n')
             else:
                 f.write(',\n')
+        # close the model for the case withoun any instance
+        if not any(instances['Overwrite']):
+            f.write(') "The wrapped model has not any overwrite signal";\n')
         # End file
         f.write('end wrapped;')
     # Export as fmu
