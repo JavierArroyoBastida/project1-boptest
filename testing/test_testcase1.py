@@ -9,7 +9,7 @@ import unittest
 import pandas as pd
 import os
 import utilities
-from examples import testcase1_proportional
+from examples import twoday_p
 
 root_dir = utilities.get_root_path()
     
@@ -31,9 +31,10 @@ class ExampleProportionalPython(unittest.TestCase):
         '''
         
         # Run test
-        kpi,res = testcase1_proportional.run()
+        kpi,res = twoday_p.run()
         # Check kpis
-        self.assertEqual(kpi['Heating Energy'], 47760585.403377)
+        self.assertEqual(kpi['energy'], 13.266839892179254)
+        self.assertEqual(kpi['comfort'], 6.568340735543789)
         # Check trajectories
         # Make dataframe
         df = pd.DataFrame(data=res['y']['time'], columns=['time'])
@@ -75,4 +76,4 @@ class API(unittest.TestCase, utilities.partialTestAPI):
         self.step_ref = 60.0
         
 if __name__ == '__main__':
-    utilities.run_tests(os.path.relpath(__file__))
+    utilities.run_tests(os.path.basename(__file__))

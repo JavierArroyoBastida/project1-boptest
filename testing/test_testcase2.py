@@ -9,7 +9,7 @@ import unittest
 import pandas as pd
 import os
 import utilities
-from examples import testcase2_supervisory
+from examples import szvav_sup
 
 root_dir = utilities.get_root_path()
     
@@ -31,9 +31,10 @@ class ExampleSupervisoryPython(unittest.TestCase):
         '''
         
         # Run test
-        kpi,res = testcase2_supervisory.run()
+        kpi,res = szvav_sup.run()
         # Check kpis
-        self.assertEqual(kpi['Heating Energy'], 469467198.2194152)
+        self.assertEqual(kpi['energy'], 132.40084858017514)
+        self.assertEqual(kpi['comfort'], 4.610775885198207)
         # Check trajectories
         # Make dataframe
         df = pd.DataFrame(data=res['y']['time'], columns=['time'])
@@ -75,4 +76,4 @@ class API(unittest.TestCase, utilities.partialTestAPI):
         self.step_ref = 3600.0
 
 if __name__ == '__main__':
-    utilities.run_tests(os.path.relpath(__file__))
+    utilities.run_tests(os.path.basename(__file__))

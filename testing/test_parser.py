@@ -8,7 +8,6 @@ import unittest
 import filecmp
 import os
 import pandas as pd
-import json
 import utilities
 from parser import parser, simulate
 
@@ -20,9 +19,11 @@ mo_path = os.path.join(root_dir,'parser', 'SimpleRC.mo')
 # Define read and overwrite block instances in test model
 read_blocks = ['EHeat', 'PHeat', 'TZone', 'setZone']
 overwrite_blocks = ['oveAct', 'oveSet']
+kpi1_outputs = ['PHeat_y', 'TZone_y']
+kpi2_outputs = ['EHeat_y', 'PHeat_y']
 
-class GetInstances(unittest.TestCase):
-    '''Tests the get_instance method of parser.
+class ParseInstances(unittest.TestCase):
+    '''Tests the parse_instances method of parser.
     
     '''
     
@@ -31,10 +32,10 @@ class GetInstances(unittest.TestCase):
         
         '''
 
-        # Run the get_instance method
-        self.instances = parser.get_instances(model_path, [mo_path])
+        # Run the parse_instances method
+        self.instances, self.kpis = parser.parse_instances(model_path, [mo_path])
         
-    def test_get_instances(self):
+    def test_parse_instances(self):
         '''Tests that Read and Overwrite blocks identified correctly.
         
         '''
@@ -57,6 +58,30 @@ class GetInstances(unittest.TestCase):
             else:
                 # Check that only Read and Overwrite blocks are included
                 self.assertTrue(False,msg='Key {0} should not be in instances.'.format(key))
+                
+    def test_parse_kips(self):
+        '''Tests that KPIs parsed correctly.
+        
+        '''
+
+        kpis = self.kpis
+        # Checks
+        for key in kpis.keys():
+            if key == 'kpi1':
+                # Check there are 2 outputs
+                self.assertEqual(len(kpis[key]),2)
+                for output in kpis[key]:
+                    # Check each ouput is identified correctly
+                    self.assertTrue(output in kpi1_outputs)
+            elif key == 'kpi2':
+                # Check there are 2 outputs
+                self.assertEqual(len(kpis[key]),2)
+                for output in kpis[key]:
+                    # Check each Overwrite block instance is identified correctly
+                    self.assertTrue(output in kpi2_outputs)
+            else:
+                # Check that only kpi1 and kpi2 are included
+                self.assertTrue(False,msg='KPI {0} should not be in kpis.'.format(key))
 
     def test_wrong_key(self):
         '''Tests that the instances are only Read and Overwrite blocks.
@@ -104,7 +129,7 @@ class WriteWrapper(unittest.TestCase):
         '''
         
         # Get signal exchange instances
-        instances = parser.get_instances(model_path, [mo_path])
+        instances, kpis = parser.parse_instances(model_path, [mo_path])
         # Write wrapper and export as fmu
         self.fmu_path, self.wrapped_path = parser.write_wrapper(model_path, [mo_path], instances)
         
@@ -133,7 +158,14 @@ class ExportSimulate(unittest.TestCase):
         '''
         
         # Parse and export fmu to working directory
-        self.fmu_path = parser.export_fmu(model_path, [mo_path])
+        self.fmu_path, self.kpi_path = parser.export_fmu(model_path, [mo_path])
+        
+    def test_kpis_json(self):
+        '''Test that kpi json exported correctly.
+        
+        '''
+        
+        self.assertTrue(filecmp.cmp(self.kpi_path, os.path.join(root_dir, 'testing', 'references', 'parser', 'kpis.json')))
 
     def test_simulate_no_overwrite(self):
         '''Test simulation with no overwriting.
