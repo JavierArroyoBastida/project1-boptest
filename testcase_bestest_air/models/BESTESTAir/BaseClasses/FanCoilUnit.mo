@@ -31,11 +31,11 @@ model FanCoilUnit "Four-pipe fan coil unit model"
     annotation (Placement(transformation(extent={{-140,40},{-100,80}})));
   Modelica.Blocks.Interfaces.RealInput yFan "Fan speed signal"
     annotation (Placement(transformation(extent={{-140,-80},{-100,-40}})));
-  Buildings.Fluid.Sensors.TemperatureTwoPort senSupTem(redeclare package Medium =
-        Medium1, m_flow_nominal=mAir_flow_nominal)
+  Buildings.Fluid.Sensors.TemperatureTwoPort senSupTem(redeclare package Medium
+      = Medium1, m_flow_nominal=mAir_flow_nominal)
     annotation (Placement(transformation(extent={{40,50},{60,70}})));
-  Buildings.Fluid.Sensors.TemperatureTwoPort senRetTem(redeclare package Medium =
-        Medium1, m_flow_nominal=mAir_flow_nominal)
+  Buildings.Fluid.Sensors.TemperatureTwoPort senRetTem(redeclare package Medium
+      = Medium1, m_flow_nominal=mAir_flow_nominal)
     annotation (Placement(transformation(extent={{60,-110},{40,-90}})));
   Buildings.Fluid.Sensors.MassFlowRate senSupFlo(redeclare package Medium =
         Medium1)
@@ -66,10 +66,50 @@ model FanCoilUnit "Four-pipe fan coil unit model"
     annotation (Placement(transformation(extent={{-8,110},{12,130}})));
   Modelica.Blocks.Math.Gain powCoo(k=-1/COP)
     annotation (Placement(transformation(extent={{-8,130},{12,150}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaPCoo(
+    description="Cooling electrical power consumption",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
+
+    y(unit="W"))
+    annotation (Placement(transformation(extent={{138,130},{158,150}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaPHea(
+    description="Heating thermal power consumption",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.GasPower,
+
+    y(unit="W"))
+    annotation (Placement(transformation(extent={{138,110},{158,130}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaPFan(
+    description="Supply fan electrical power consumption",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
+
+    y(unit="W"))
+    annotation (Placement(transformation(extent={{138,90},{158,110}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaSupMas(
+    description="Supply air mass flowrate",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
+    y(unit="kg/s"))
+    annotation (Placement(transformation(extent={{32,74},{52,94}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaSupT(
+    description="Supply air temperature",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
+    y(unit="K"))
+    annotation (Placement(transformation(extent={{68,70},{88,90}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaRetT(
+    description="Return air temperature",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
+    y(unit="K"))
+    annotation (Placement(transformation(extent={{64,-90},{84,-70}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaFan(
+    description="Supply fan speed setpoint",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
+    y(unit="1"))
+    annotation (Placement(transformation(extent={{-78,-90},{-58,-70}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaTSupSet(
+    description="Supply air temperature setpoint",
+    KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.None,
+    y(unit="K"))
+    annotation (Placement(transformation(extent={{-88,50},{-68,70}})));
 equation
-  connect(fan.y, yFan)
-    annotation (Line(points={{-42,-80},{-60,-80},{-60,-60},{-120,-60}},
-                                                    color={0,0,127}));
   connect(senSupTem.port_b, supplyAir)
     annotation (Line(points={{60,60},{100,60}}, color={0,127,255}));
   connect(returnAir, senRetTem.port_a)
@@ -97,10 +137,30 @@ equation
     annotation (Line(points={{-10,140},{-38,140},{-38,41}}, color={0,0,127}));
   connect(heaCoi.Q_flow, powHea.u) annotation (Line(points={{-38,-19},{-38,-8},{
           -46,-8},{-46,120},{-10,120}}, color={0,0,127}));
-  connect(TSupSet, cooCoi.TSet) annotation (Line(points={{-120,60},{-80,60},{-80,
-          8},{-38,8},{-38,18}}, color={0,0,127}));
-  connect(TSupSet, heaCoi.TSet) annotation (Line(points={{-120,60},{-80,60},{-80,
-          -50},{-38,-50},{-38,-42}}, color={0,0,127}));
+  connect(TSupSet, cooCoi.TSet) annotation (Line(points={{-120,60},{-60,60},{
+          -60,6},{-38,6},{-38,18}},
+                                color={0,0,127}));
+  connect(TSupSet, heaCoi.TSet) annotation (Line(points={{-120,60},{-60,60},{
+          -60,-52},{-38,-52},{-38,-42}},
+                                     color={0,0,127}));
+  connect(PCoo, reaPCoo.u)
+    annotation (Line(points={{110,140},{136,140}}, color={0,0,127}));
+  connect(PHea, reaPHea.y)
+    annotation (Line(points={{110,120},{159,120}}, color={0,0,127}));
+  connect(PFan, reaPFan.u)
+    annotation (Line(points={{110,100},{136,100}}, color={0,0,127}));
+  connect(senSupFlo.m_flow, reaSupMas.u)
+    annotation (Line(points={{20,71},{20,84},{30,84}}, color={0,0,127}));
+  connect(senSupTem.T, reaSupT.u) annotation (Line(points={{50,71},{58,71},{58,
+          80},{66,80}}, color={0,0,127}));
+  connect(senRetTem.T, reaRetT.u) annotation (Line(points={{50,-89},{56,-89},{
+          56,-80},{62,-80}}, color={0,0,127}));
+  connect(fan.y, reaFan.y)
+    annotation (Line(points={{-42,-80},{-57,-80}}, color={0,0,127}));
+  connect(reaFan.u, yFan) annotation (Line(points={{-80,-80},{-90,-80},{-90,-60},
+          {-120,-60}}, color={0,0,127}));
+  connect(TSupSet, reaTSupSet.u)
+    annotation (Line(points={{-120,60},{-90,60}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-140},
             {100,140}}),                                        graphics={
                                         Text(

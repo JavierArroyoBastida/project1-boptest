@@ -21,14 +21,16 @@ model TestCase "Testcase model"
     annotation (Placement(transformation(extent={{-50,-10},{-30,10}})));
   BaseClasses.FanCoilUnit fcu(dpAir_nominal(displayUnit="Pa"))
     annotation (Placement(transformation(extent={{0,-14},{20,14}})));
+  IBPSA.Utilities.IO.SignalExchange.Read reaTRooAir(description=
+        "Zone air temperature", KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.AirZoneTemperature,
+    y(unit="K"))
+    annotation (Placement(transformation(extent={{76,-50},{56,-30}})));
 equation
   connect(TSetHea.y[1], con.TSetHea) annotation (Line(points={{-79,-32},{-70,
           -32},{-70,4},{-52,4}},
                             color={0,0,127}));
   connect(TSetCoo.y[1], con.TSetCoo) annotation (Line(points={{-79,30},{-70,30},
           {-70,8},{-52,8}}, color={0,0,127}));
-  connect(zon.TRooAir, con.TZon) annotation (Line(points={{81,0},{90,0},{90,-20},
-          {-60,-20},{-60,0},{-52,0}}, color={0,0,127}));
   connect(con.yFan, fcu.yFan) annotation (Line(points={{-29,-2},{-26,-2},{-26,
           -6},{-2,-6}},
                      color={0,0,127}));
@@ -38,6 +40,10 @@ equation
           {44,-10},{20,-10}}, color={0,127,255}));
   connect(con.TSupSet, fcu.TSupSet) annotation (Line(points={{-29,2},{-26,2},{
           -26,6},{-2,6}}, color={0,0,127}));
+  connect(zon.TRooAir, reaTRooAir.u) annotation (Line(points={{81,0},{94,0},{94,
+          -40},{78,-40}}, color={0,0,127}));
+  connect(reaTRooAir.y, con.TZon) annotation (Line(points={{55,-40},{-56,-40},{
+          -56,0},{-52,0}}, color={0,0,127}));
   annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     experiment(
