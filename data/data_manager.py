@@ -259,7 +259,7 @@ class Data_Manager(object):
         
         # Load kpi json
         json_str = z_fmu.open('resources/kpis.json').read()
-        self.case.kpi_json = json.loads(json_str)
+        self.case.kpi_json = json.loads(json_str.decode('utf-8'))
         
         # Find the test case data files
         files = []
