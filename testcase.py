@@ -11,7 +11,7 @@ import numpy as np
 import copy
 import config
 import time
-from data.data_manager import Data_Manager
+from casedata.data_manager import Data_Manager
 from forecast.forecaster import Forecaster
 from kpis.kpi_calculator import KPI_Calculator
 

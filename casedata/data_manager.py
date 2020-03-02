@@ -51,7 +51,7 @@ class Data_Manager(object):
         # Find path to data directory
         data_dir = os.path.join(\
             os.path.split(os.path.split(os.path.abspath(__file__))[0])[0],
-            'data')
+            'casedata')
         
         # Load possible data keys
         with open(os.path.join(data_dir,'categories.json'),'r') as f:
