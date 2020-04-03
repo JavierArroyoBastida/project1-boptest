@@ -16,7 +16,7 @@ from pyfmi import load_fmu
 from pymodelica import compile_fmu
 import os
 import json
-from data.data_manager import Data_Manager
+from casedata.data_manager import Data_Manager
 import warnings
 
 def parse_instances(model_path, file_name):
