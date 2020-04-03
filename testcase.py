@@ -11,7 +11,7 @@ import numpy as np
 import copy
 import config
 import time
-from data.data_manager import Data_Manager
+from casedata.data_manager import Data_Manager
 from forecast.forecaster import Forecaster
 from kpis.kpi_calculator import KPI_Calculator
 
@@ -34,7 +34,7 @@ class TestCase(object):
         self.fmu.set_log_level(7)
         # Get version and check is 2.0
         self.fmu_version = self.fmu.get_version()
-        if self.fmu_version != '2.0':
+        if self.fmu_version.decode('utf-8') != '2.0':
             raise ValueError('FMU must be version 2.0.')
         # Instantiate a data manager for this test case
         self.data_manager = Data_Manager(testcase=self)
@@ -390,7 +390,8 @@ class TestCase(object):
                 mini = None
                 maxi = None
             else:
-                unit = fmu.get_variable_unit(var)
+                # unit = fmu.get_variable_unit(var)
+                unit = 'None'
                 description = fmu.get_variable_description(var)
                 if inputs:
                     mini = fmu.get_variable_min(var)

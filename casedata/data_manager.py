@@ -51,7 +51,7 @@ class Data_Manager(object):
         # Find path to data directory
         data_dir = os.path.join(\
             os.path.split(os.path.split(os.path.abspath(__file__))[0])[0],
-            'data')
+            'casedata')
         
         # Load possible data keys
         with open(os.path.join(data_dir,'categories.json'),'r') as f:
@@ -259,7 +259,7 @@ class Data_Manager(object):
         
         # Load kpi json
         json_str = z_fmu.open('resources/kpis.json').read()
-        self.case.kpi_json = json.loads(json_str)
+        self.case.kpi_json = json.loads(json_str.decode('utf-8'))
         
         # Find the test case data files
         files = []
