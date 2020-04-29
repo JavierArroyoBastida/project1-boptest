@@ -263,10 +263,9 @@ model Envelope "Envelope of INFRAX"
   "Embedded heat port for CCA"
     annotation (Placement(transformation(extent={{130,-10},{150,10}})));
   INFRAX.SubSystems.Controllers.DataBus dataBus
-  "Data bus containing information of sensors"
-    annotation (Placement(transformation(extent={{-160,-20},{-120,
-            20}}),
-        iconTransformation(extent={{-110,-10},{-90,10}})));
+    "Data bus containing information of sensors" annotation (Placement(
+        transformation(extent={{-160,-20},{-120,20}}), iconTransformation(
+          extent={{-110,-10},{-90,10}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[27] conv
   "Heat port for convective heat transfer"
     annotation (Placement(transformation(extent={{130,-50},{150,-30}})));

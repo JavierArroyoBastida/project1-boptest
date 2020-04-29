@@ -1,6 +1,6 @@
 within INFRAX.SubSystems.Controllers.Components;
-model RunningMeanTemperature3points
-  "Calculate the running mean temperature of the previous day at 7, 14 and 21"
+model RunningMeanTemperature7to18
+  "Calculate the running mean temperature from 7h to 18h"
 
   parameter Real[24] TAveDayIni(unit="K", displayUnit="degC") = ones(24).* 283.15
     "Initial running mean temperature";
@@ -12,18 +12,18 @@ model RunningMeanTemperature3points
 
 protected
   discrete Real[24] TAveDay(unit="K",displayUnit = "degC")
-    "Vector with the average hour temperatures of the last day";
+    "Vector with the average hour temperatures of the previous day";
 
 public
   Modelica.Blocks.Sources.RealExpression TAmb(y=sim.Te)
     annotation (Placement(transformation(extent={{-80,-10},{-60,10}})));
-  inner IDEAS.BoundaryConditions.SimInfoManager sim
+  outer IDEAS.BoundaryConditions.SimInfoManager sim
     annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
 algorithm
   when initial() then
     // initialization of the discrete variables
     TAveDay:= TAveDayIni;
-  elsewhen sample(0,3600) then
+  elsewhen sample(3600,3600) then
     // Update of TAveDay
 
      for i in 2:24 loop
@@ -39,8 +39,8 @@ initial equation
 
 equation
 
-  when sample(3600*21, 3600*24) then
-    TRm = (TAveDay[1]*2+TAveDay[8]+TAveDay[15])/4;
+  when sample(3600*18, 3600*24) then
+    TRm = sum(TAveDay[7:18])/12;
   end when
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
             -100},{100,100}}), graphics),
@@ -74,4 +74,4 @@ First implementation.
 </ul>
 </html>"));
 
-end RunningMeanTemperature3points;
+end RunningMeanTemperature7to18;

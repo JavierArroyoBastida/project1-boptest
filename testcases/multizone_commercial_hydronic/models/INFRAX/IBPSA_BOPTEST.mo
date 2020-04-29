@@ -36,8 +36,7 @@ model IBPSA_BOPTEST
         clock.hour <= 19) and (clock.weekDay) < 6) or buiCon.nightVent.NightVentilation
          == true then 200 else 0) "setpoit for toilet fans"
     annotation (Placement(transformation(extent={{-94,30},{-72,50}})));
-  SubSystems.Controllers.Components.Clock
-                             clock
+  SubSystems.Controllers.Components.Clock clock
     annotation (Placement(transformation(extent={{-100,0},{-80,20}})));
 protected
   Modelica.Thermal.HeatTransfer.Sources.FixedTemperature[27] preTem(each T=297.15)

@@ -61,7 +61,6 @@ expandable connector SignalBus "Data bus that stores signal data"
 //   Real TW_3way_signal "thermal wheel minimum state (no working)";
 //   Real NightVentilation "night ventilation on/off";
 
-
   annotation (
     defaultComponentName="weaBus",
     Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},{100,

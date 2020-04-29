@@ -276,9 +276,9 @@ model Floor2_noVent
   level due to the glass hollow"
     annotation (Placement(transformation(extent={{-60,-120},{-20,-80}})));
   INFRAX.SubSystems.Controllers.DataBus dataBus
-  "Bus containing data from different sensors" annotation (Placement(transformation(extent={{-160,20},{-120,
-            60}}),
-        iconTransformation(extent={{-110,-10},{-90,10}})));
+    "Bus containing data from different sensors" annotation (Placement(
+        transformation(extent={{-160,20},{-120,60}}), iconTransformation(extent
+          ={{-110,-10},{-90,10}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[5] gainCon
   "Bus to connect convective heat transfer to the zones"
     annotation (Placement(transformation(extent={{130,-60},{150,-40}})));

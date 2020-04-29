@@ -6,31 +6,31 @@ model RBC_BOPTEST "hybridGEOTABS RBC baseline"
         iconTransformation(extent={{-110,-10},{-90,10}})));
   SignalBus signalBus annotation (Placement(transformation(extent={{80,-20},{120,
             20}}), iconTransformation(extent={{90,-10},{110,10}})));
-  SubControllers.ModeSelector_BOPTEST  modSel(
+  INFRAX.SubSystems.Controllers.SubControllers.ModeSelector_BOPTEST modSel(
     heat(start=true),
     rest(start=false),
     cool(start=false)) "Mode selector sequence"
     annotation (Placement(transformation(extent={{40,80},{60,100}})));
-  SubControllers.TABS tabsCon
+  INFRAX.SubSystems.Controllers.SubControllers.TABS tabsCon
     "Model that includes the control logic of TABS components"
     annotation (Placement(transformation(extent={{60,40},{80,60}})));
   Occupancy.Comfort.Limits
                      temLim(typeLimit=2, nZones=14)
     "Model that computes the building limits and calculates the discomfort"
     annotation (Placement(transformation(extent={{-60,-10},{-40,12}})));
-  SubControllers.Valves.Tavg_of_floors avgFlrT
+  INFRAX.SubSystems.Controllers.SubControllers.Valves.Tavg_of_floors avgFlrT
     "Model that computes the average temperature of the different floors"
     annotation (Placement(transformation(extent={{-100,60},{-80,80}})));
-  SubControllers.HP_set hpCon
+  INFRAX.SubSystems.Controllers.SubControllers.HP_set hpCon
     "Model that includes the control logic of the GSHPs"
     annotation (Placement(transformation(extent={{60,10},{80,30}})));
-  SubControllers.AHU_baseline ahuCon
+  INFRAX.SubSystems.Controllers.SubControllers.AHU_control ahuCon
     "Model that includes the control logic of the AHU"
     annotation (Placement(transformation(extent={{60,-34},{80,-6}})));
-  SubControllers.Situations.Situations ctCon
+  INFRAX.SubSystems.Controllers.SubControllers.Situations.Situations ctCon
     "Model that includes the control logic of the cooling tower"
     annotation (Placement(transformation(extent={{60,-60},{80,-40}})));
-  SubControllers.VAV_baseline vavCon
+  INFRAX.SubSystems.Controllers.SubControllers.VAV_baseline vavCon
     "Model that includes the control logic of the VAV and heating coils within the ducts"
     annotation (Placement(transformation(extent={{60,-94},{80,-66}})));
   INFRAX.SubSystems.Controllers.SubControllers.SunShading sunSha
@@ -41,7 +41,7 @@ model RBC_BOPTEST "hybridGEOTABS RBC baseline"
         IDEAS.Types.Azimuth.W},{IDEAS.Types.Tilt.Wall,IDEAS.Types.Azimuth.N},{
         IDEAS.Types.Tilt.Wall,IDEAS.Types.Azimuth.E}})
     annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
-  SubControllers.NightVentilation nightVent
+  INFRAX.SubSystems.Controllers.SubControllers.NightVentilation nightVent
     "Model that includes the control logic of night ventilation"
     annotation (Placement(transformation(extent={{-54,24},{-34,44}})));
   OverwriteBoolean overwriteBoolean(

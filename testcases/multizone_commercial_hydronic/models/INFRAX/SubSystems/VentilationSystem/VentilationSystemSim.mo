@@ -51,9 +51,9 @@ model VentilationSystemSim
     tAirSupply(allowFlowReversal=true),
     tAHUSupply(allowFlowReversal=false),
     tAHUExtract(allowFlowReversal=false));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant supplyCAV[7](k=1)
+  Modelica.Blocks.Sources.Constant                       supplyCAV[7](k=1)
     annotation (Placement(transformation(extent={{12,-16},{22,-6}})));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant extractCAV[10](k=1)
+  Modelica.Blocks.Sources.Constant                       extractCAV[10](k=1)
     annotation (Placement(transformation(extent={{-20,64},{-8,76}})));
   Modelica.Blocks.Sources.RealExpression extractVAV[14](y={air.m_nominal_extract_vav_min[
         i]/air.m_nominal_extract_vav[i] + (1 - air.m_nominal_extract_vav_min[i]

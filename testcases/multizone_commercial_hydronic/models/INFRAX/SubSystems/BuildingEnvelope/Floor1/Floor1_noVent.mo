@@ -494,10 +494,9 @@ model Floor1_noVent
   "Embedded port towards outer walls in the extension roof"
     annotation (Placement(transformation(extent={{130,60},{150,80}})));
   INFRAX.SubSystems.Controllers.DataBus dataBus
-  "Bus containing data from different sensors"
-    annotation (Placement(transformation(extent={{-160,20},{-120,
-            60}}),
-        iconTransformation(extent={{-110,-10},{-90,10}})));
+    "Bus containing data from different sensors" annotation (Placement(
+        transformation(extent={{-160,20},{-120,60}}), iconTransformation(extent
+          ={{-110,-10},{-90,10}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_b[7] gainRad
   "Bus to connect the radiative heat transfer to the zones"
     annotation (Placement(transformation(extent={{130,-80},{150,-60}})));

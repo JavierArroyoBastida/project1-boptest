@@ -381,10 +381,11 @@ IDEAS.Fluid.Movers.FlowControlled_dp pump6(
   Modelica.Fluid.Interfaces.FluidPort_a HeaCoi_a(redeclare package Medium =
         MediumWater)       "supply to VAV/ducts coils"
     annotation (Placement(transformation(extent={{150,-110},{170,-90}})));
-  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={{-214,20},
-            {-186,48}}),           iconTransformation(extent={{-210,-30},{-190,-10}})));
-  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-214,44},
-            {-184,72}}),    iconTransformation(extent={{-210,4},{-190,24}})));
+  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={
+            {-214,20},{-186,48}}), iconTransformation(extent={{-210,-30},{-190,
+            -10}})));
+  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-214,
+            44},{-184,72}}), iconTransformation(extent={{-210,4},{-190,24}})));
   IDEAS.Fluid.Sensors.TemperatureTwoPort[21] tAirSupply(
     m_flow_nominal=10000*1.225/3600,
     allowFlowReversal=false,

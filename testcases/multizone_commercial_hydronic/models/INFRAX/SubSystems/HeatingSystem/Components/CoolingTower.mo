@@ -126,11 +126,12 @@ Buildings.Fluid.HeatExchangers.CoolingTowers.YorkCalc coolingTower(
         extent={{-7,-6.5},{7,6.5}},
         rotation=-90,
         origin={61.5,65})));
-  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-158,0},
-            {-118,40}}),    iconTransformation(extent={{-150,6},{-130,26}})));
-  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={{-158,
-            -40},{-118,0}}),       iconTransformation(extent={{-150,-28},{
-            -130,-8}})));
+  INFRAX.SubSystems.Controllers.DataBus dataBus annotation (Placement(
+        transformation(extent={{-158,0},{-118,40}}), iconTransformation(extent=
+            {{-150,6},{-130,26}})));
+  INFRAX.SubSystems.Controllers.SignalBus signalBus annotation (Placement(
+        transformation(extent={{-158,-40},{-118,0}}), iconTransformation(extent
+          ={{-150,-28},{-130,-8}})));
   Modelica.Fluid.Interfaces.FluidPort_a port_a1(redeclare package Medium =
         MediumGlycol)      annotation (Placement(transformation(rotation=0,
           extent={{88,0},{112,20}})));

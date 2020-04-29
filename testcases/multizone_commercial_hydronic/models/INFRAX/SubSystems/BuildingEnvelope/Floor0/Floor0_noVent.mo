@@ -411,8 +411,8 @@ model Floor0_noVent
         extent={{-6,-10},{6,10}},
         rotation=90,
         origin={-56,-56})));
-  INFRAX.SubSystems.Controllers.DataBus dataBus "Bus connecting floor sensors" annotation (Placement(transformation(extent={{-160,20},{-120,
-            60}}),
+  INFRAX.SubSystems.Controllers.DataBus dataBus "Bus connecting floor sensors"
+    annotation (Placement(transformation(extent={{-160,20},{-120,60}}),
         iconTransformation(extent={{-110,-10},{-90,10}})));
   Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a[8] gainCon
   "Bus to connect convective heat transfer to the zones"

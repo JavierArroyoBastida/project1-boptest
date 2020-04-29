@@ -118,8 +118,6 @@ expandable connector DataBus "Data bus that stores sensor data"
   Real southShading "movable south windows shading signal";
   Real westShading "movable west windows shading signal";
 
-
-
   annotation (
     defaultComponentName="weaBus",
     Icon(coordinateSystem(preserveAspectRatio=true, extent={{-100,-100},{100,

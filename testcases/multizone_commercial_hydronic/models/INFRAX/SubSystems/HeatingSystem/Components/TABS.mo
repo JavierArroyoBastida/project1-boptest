@@ -22,6 +22,7 @@ model TABS "TABS System for the TACO approach"
         rotation=90,
         origin={70,-31})));
   IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe[15] cca0(
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     redeclare each INFRAX.Data.Parameters.INFRAXTABS RadSlaCha,
     redeclare each package Medium = IDEAS.Media.Water,
     each massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
@@ -87,6 +88,7 @@ model TABS "TABS System for the TACO approach"
         rotation=90,
         origin={-60,-43})));
   IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe[9] cca1(
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     redeclare INFRAX.Data.Parameters.INFRAXTABS RadSlaCha,
     redeclare each package Medium = IDEAS.Media.Water,
     each massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
@@ -98,6 +100,7 @@ model TABS "TABS System for the TACO approach"
     each mSenFac=1)             "TABS 1st floor"
     annotation (Placement(transformation(extent={{-24,8},{-4,28}})));
   IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe[7] cca2(
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     redeclare each INFRAX.Data.Parameters.INFRAXTABS RadSlaCha,
     redeclare each package Medium = IDEAS.Media.Water,
     each massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
@@ -109,6 +112,7 @@ model TABS "TABS System for the TACO approach"
     each mSenFac=1)             "TABS 2nd floor"
     annotation (Placement(transformation(extent={{-24,36},{-4,56}})));
   IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe[4] cca3(
+    energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     redeclare each INFRAX.Data.Parameters.INFRAXTABS RadSlaCha,
     redeclare each package Medium = IDEAS.Media.Water,
     each massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
@@ -240,11 +244,10 @@ model TABS "TABS System for the TACO approach"
         extent={{-6,-6},{6,6}},
         rotation=-90,
         origin={70,-84})));
-  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-120,-2},
-            {-80,38}}),     iconTransformation(extent={{-112,6},{-92,26}})));
-  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={{-118,
-            -42},{-78,-2}}),       iconTransformation(extent={{-112,-28},{-92,
-            -8}})));
+  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-120,
+            -2},{-80,38}}), iconTransformation(extent={{-112,6},{-92,26}})));
+  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={
+            {-118,-42},{-78,-2}}), iconTransformation(extent={{-112,-28},{-92,-8}})));
   IDEAS.Fluid.FixedResistances.Junction jun7(
     redeclare package Medium = IDEAS.Media.Water,
     portFlowDirection_1=Modelica.Fluid.Types.PortFlowDirection.Entering,

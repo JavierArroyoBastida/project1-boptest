@@ -300,10 +300,11 @@ model HeatingSystem "detailed heating system for simulation with TACO"
     annotation (Placement(transformation(extent={{194,80},{218,100}})));
   Components.TABS tABS_detailed
     annotation (Placement(transformation(extent={{86,68},{106,88}})));
-  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-220,-2},
-            {-180,38}}),    iconTransformation(extent={{-210,4},{-190,24}})));
-  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={{-218,
-            -42},{-178,-2}}),      iconTransformation(extent={{-210,-30},{-190,-10}})));
+  Controllers.DataBus dataBus annotation (Placement(transformation(extent={{-220,
+            -2},{-180,38}}), iconTransformation(extent={{-210,4},{-190,24}})));
+  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={
+            {-218,-42},{-178,-2}}), iconTransformation(extent={{-210,-30},{-190,
+            -10}})));
   IDEAS.Fluid.FixedResistances.Junction jun4(
     m_flow_nominal={1,1,1},
     dp_nominal={0,0,0},

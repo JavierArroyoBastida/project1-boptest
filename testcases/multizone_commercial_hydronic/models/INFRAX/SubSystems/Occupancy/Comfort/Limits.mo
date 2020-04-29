@@ -28,8 +28,7 @@ model Limits
             {{140,-26},{170,4}}), iconTransformation(extent={{140,-20},{158,-2}})));
   Modelica.Blocks.Sources.RealExpression realExpression(y=(TSoftUp + TSoftDown)
         /2) annotation (Placement(transformation(extent={{78,-22},{102,0}})));
-  Controllers.Components.Clock
-                             clock
+  Controllers.Components.Clock clock
     annotation (Placement(transformation(extent={{0,60},{20,80}})));
 equation
   for i in 1:nZones loop

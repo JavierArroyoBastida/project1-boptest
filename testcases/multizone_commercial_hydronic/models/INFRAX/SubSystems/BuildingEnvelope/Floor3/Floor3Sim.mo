@@ -8,7 +8,7 @@ model Floor3Sim
     from_dp=true,
       dpValve_nominal=50,
       use_inputFilter=false));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant cav(k=1)
+  Modelica.Blocks.Sources.Constant                       cav(k=1)
     annotation (Placement(transformation(extent={{-136,56},{-128,64}})));
 equation
   connect(cav.y, bath_duct.y) annotation (Line(points={{-127.6,60},{-95,60},{

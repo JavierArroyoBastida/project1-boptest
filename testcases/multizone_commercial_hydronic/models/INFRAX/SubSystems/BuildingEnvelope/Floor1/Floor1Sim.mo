@@ -13,7 +13,7 @@ model Floor1Sim
     meetingRoom1(nPorts=2),
     northZone(nPorts=2),
     bathroomZone(nPorts=2));
-  Buildings.Controls.OBC.CDL.Continuous.Sources.Constant cav(k=1)
+  Modelica.Blocks.Sources.Constant                       cav(k=1)
     annotation (Placement(transformation(extent={{-136,56},{-128,64}})));
 equation
   connect(cav.y, bath_duct.y) annotation (Line(points={{-127.6,60},{-110,60},{

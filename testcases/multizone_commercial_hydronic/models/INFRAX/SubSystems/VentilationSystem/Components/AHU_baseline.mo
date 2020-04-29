@@ -4,7 +4,7 @@ model AHU_baseline "Infrax AHU"
   extends
     INFRAX.SubSystems.VentilationSystem.Components.Dependencies.PartialAHU;
 
-  Buildings.Fluid.FixedResistances.Junction                   spl(
+  IDEAS.Fluid.FixedResistances.Junction                       spl(
     dp_nominal={0,0,0},
     massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
     tau=tau,
@@ -104,35 +104,6 @@ model AHU_baseline "Infrax AHU"
     from_dp1=false,
     eps=0.7)   "Heat recovery wheel"
     annotation (Placement(transformation(extent={{-10,0},{10,20}})));
-  Controllers.EnergyKPIBus energyKPIBus annotation (Placement(transformation(
-          extent={{80,-8},{120,32}}), iconTransformation(extent={{-110,8},{-90,
-            28}})));
-  Modelica.Blocks.Sources.RealExpression realExpression2(y=if hexUA.Q2_flow > 0
-         then hexUA.Q2_flow else 0)
-    annotation (Placement(transformation(extent={{32,32},{46,48}})));
-  Modelica.Blocks.Math.Gain gain(k=1/1000) "W to kW"
-    annotation (Placement(transformation(extent={{56,36},{64,44}})));
-  Modelica.Blocks.Continuous.Integrator integrator(k=1/3600)
-    annotation (Placement(transformation(extent={{74,36},{82,44}})));
-  Modelica.Blocks.Sources.RealExpression realExpression1(y=if hexUA.Q2_flow < 0
-         then hexUA.Q2_flow else 0)
-    annotation (Placement(transformation(extent={{32,16},{46,32}})));
-  Modelica.Blocks.Math.Gain gain1(k=1/1000) "W to kW"
-    annotation (Placement(transformation(extent={{56,20},{64,28}})));
-  Modelica.Blocks.Continuous.Integrator integrator1(k=1/3600)
-    annotation (Placement(transformation(extent={{74,20},{82,28}})));
-  Modelica.Blocks.Math.Gain gain2(k=1/1000) "W to kW"
-    annotation (Placement(transformation(extent={{56,-20},{64,-12}})));
-  Modelica.Blocks.Math.Gain gain3(k=1/1000) "W to kW"
-    annotation (Placement(transformation(extent={{56,-4},{64,4}})));
-  Modelica.Blocks.Continuous.Integrator integrator2(k=1/3600)
-    annotation (Placement(transformation(extent={{74,-4},{82,4}})));
-  Modelica.Blocks.Continuous.Integrator integrator3(k=1/3600)
-    annotation (Placement(transformation(extent={{74,-20},{82,-12}})));
-  Modelica.Blocks.Sources.RealExpression realExpression3(y=cooCoi.Q2_flow)
-    annotation (Placement(transformation(extent={{32,-8},{46,8}})));
-  Modelica.Blocks.Sources.RealExpression realExpression4(y=heaCoi.Q2_flow)
-    annotation (Placement(transformation(extent={{32,-24},{46,-8}})));
 equation
   heatPort.T=273.15;
 
@@ -171,71 +142,6 @@ equation
       index=1,
       extent={{-3,-6},{-3,-6}},
       horizontalAlignment=TextAlignment.Right));
-  connect(realExpression2.y, gain.u)
-    annotation (Line(points={{46.7,40},{55.2,40}}, color={0,0,127}));
-  connect(gain.y, integrator.u)
-    annotation (Line(points={{64.4,40},{73.2,40}}, color={0,0,127}));
-  connect(integrator.y, energyKPIBus.Q_TW_heating) annotation (Line(points={{
-          82.4,40},{100.1,40},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(gain.y, energyKPIBus.dotQ_TW_heating) annotation (Line(points={{64.4,
-          40},{68,40},{68,12.1},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(realExpression1.y, gain1.u)
-    annotation (Line(points={{46.7,24},{55.2,24}}, color={0,0,127}));
-  connect(gain1.y, integrator1.u)
-    annotation (Line(points={{64.4,24},{73.2,24}}, color={0,0,127}));
-  connect(integrator1.y, energyKPIBus.Q_TW_cooling) annotation (Line(points={{
-          82.4,24},{92,24},{92,12.1},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(gain1.y, energyKPIBus.dotQ_TW_cooling) annotation (Line(points={{64.4,
-          24},{68,24},{68,12.1},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(gain3.y, integrator2.u) annotation (Line(points={{64.4,0},{69.2,0},{
-          69.2,0},{73.2,0}}, color={0,0,127}));
-  connect(gain2.y, integrator3.u)
-    annotation (Line(points={{64.4,-16},{73.2,-16}}, color={0,0,127}));
-  connect(realExpression3.y, gain3.u)
-    annotation (Line(points={{46.7,0},{55.2,0}}, color={0,0,127}));
-  connect(realExpression4.y, gain2.u)
-    annotation (Line(points={{46.7,-16},{55.2,-16}}, color={0,0,127}));
-  connect(gain3.y, energyKPIBus.dotQ_AHUcooCoi) annotation (Line(points={{64.4,
-          0},{68,0},{68,8},{100.1,8},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(integrator2.y, energyKPIBus.Q_AHUcooCoi) annotation (Line(points={{
-          82.4,0},{100.1,0},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(integrator3.y, energyKPIBus.Q_AHUheaCoi) annotation (Line(points={{
-          82.4,-16},{100.1,-16},{100.1,12.1}}, color={0,0,127}), Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
-  connect(gain2.y, energyKPIBus.dotQ_AHUheaCoi) annotation (Line(points={{64.4,
-          -16},{68,-16},{68,-8},{100.1,-8},{100.1,12.1}}, color={0,0,127}),
-      Text(
-      string="%second",
-      index=1,
-      extent={{6,3},{6,3}},
-      horizontalAlignment=TextAlignment.Left));
   connect(portCooCoi_a1, cooCoi.port_a2) annotation (Line(points={{-80,-100},{
           -80,-72},{-70,-72}}, color={0,127,255}));
   connect(portCooCoi_b1, cooCoi.port_b2) annotation (Line(points={{-40,-100},{

@@ -100,8 +100,8 @@ partial model PartialAHU "air handling unit of INFRAX"
   parameter Modelica.SIunits.PressureDifference dpAirSupTW_nominal
     "Pressure difference of exhaust air in thermal wheel"
     annotation (Dialog(group="Nominal pressure drops"));
-  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={{-94,86},
-            {-66,114}}),           iconTransformation(extent={{-210,-30},{-190,-10}})));
+  Controllers.SignalBus signalBus annotation (Placement(transformation(extent={
+            {-94,86},{-66,114}}), iconTransformation(extent={{-210,-30},{-190,-10}})));
 equation
 
   annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
