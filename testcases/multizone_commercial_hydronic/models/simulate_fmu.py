@@ -6,7 +6,7 @@ Created on Apr 29, 2020
 
 from pyfmi import load_fmu
 
-model = load_fmu('INFRAX_IBPSA_BOPTEST_Copy.fmu')
+model = load_fmu('wrapped.fmu')
 
 opts = model.simulate_options()
 opts['solver'] = 'ExplicitEuler'
