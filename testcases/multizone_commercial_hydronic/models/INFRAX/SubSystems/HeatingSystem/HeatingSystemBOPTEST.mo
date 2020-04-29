@@ -1,6 +1,7 @@
 within INFRAX.SubSystems.HeatingSystem;
 model HeatingSystemBOPTEST
-  extends HeatingSystem;
+  extends HeatingSystem(borField(allowFlowReversal=true), pump1(
+        allowFlowReversal=true));
   IBPSA.Utilities.IO.SignalExchange.Read heaPumPow1(
     description="Power of heat pump 1",
     KPIs=IBPSA.Utilities.IO.SignalExchange.SignalTypes.SignalsForKPIs.ElectricPower,
