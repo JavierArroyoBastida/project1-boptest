@@ -105,20 +105,14 @@ equation
     Icon(coordinateSystem(preserveAspectRatio=false)),
     Diagram(coordinateSystem(preserveAspectRatio=false)),
     experiment(
-      StopTime=3.1536e+007,
+      StopTime=604800,
       __Dymola_NumberOfIntervals=15000,
-      Tolerance=1e-006,
-      __Dymola_fixedstepsize=20,
+      Tolerance=1e-06,
+      __Dymola_fixedstepsize=15,
       __Dymola_Algorithm="Euler"),
     __Dymola_experimentSetupOutput(events=false),
-    __Dymola_experimentFlags(
-      Advanced(
-        GenerateVariableDependencies=false,
-        OutputModelicaCode=true,
+    __Dymola_experimentFlags(Advanced(
         InlineMethod=0,
         InlineOrder=2,
-        InlineFixedStep=0.001),
-      Evaluate=true,
-      OutputCPUtime=true,
-      OutputFlatModelica=true));
+        InlineFixedStep=0.001)));
 end IBPSA_BOPTEST;
