@@ -7,6 +7,7 @@ model wrapped "Wrapped model"
 	// Out read
 	Modelica.Blocks.Interfaces.RealOutput outputP_y(unit="W") = mod.outputP.y "Pump electrical power";
 	Modelica.Blocks.Interfaces.RealOutput outputQ_y(unit="W") = mod.outputQ.y "Thermal power";
+	Modelica.Blocks.Interfaces.RealOutput outputCO2_y(unit="ppm") = mod.outputCO2.y "CO2 concentration in the zone";
 	Modelica.Blocks.Interfaces.RealOutput outputT_y(unit="K") = mod.outputT.y "Zone temperature";
 	// Original model
 	BESTESTHydronic.TestCase mod(
