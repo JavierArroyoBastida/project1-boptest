@@ -218,6 +218,7 @@ test_all:
 # Build jm
 	make build_jm_image
 # Run tests
+	make test_bestest_hydronic
 	make test_parser
 	make test_data
 	make test_forecast
