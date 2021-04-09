@@ -63,6 +63,8 @@ class TestCase(object):
         # Set default fmu simulation options
         self.options = self.fmu.simulate_options()
         self.options['CVode_options']['rtol'] = 1e-6
+        self.options['filter'] = self.output_names + self.input_names
+        self.options['CVode_options']['store_event_points'] = False
         # Assign initial testing time
         self.initial_time = 0
         # Set initial fmu simulation start
@@ -120,6 +122,8 @@ class TestCase(object):
 
         # Set fmu initialization option
         self.options['initialize'] = self.initialize_fmu
+        # Set sample rate
+        self.options['ncp'] = int((end_time-start_time)/30)
         # Simulate fmu
         try:
              res = self.fmu.simulate(start_time = start_time,
