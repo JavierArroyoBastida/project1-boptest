@@ -49,6 +49,7 @@ class TestCase(object):
         # Get available control inputs and outputs
         self.input_names = self.fmu.get_model_variables(causality = 2).keys()
         self.output_names = self.fmu.get_model_variables(causality = 3).keys()
+        self.stat_names = sorted(self.fmu.get_states_list())
         # Get input and output meta-data
         self.inputs_metadata = self._get_var_metadata(self.fmu, self.input_names, inputs=True)
         self.outputs_metadata = self._get_var_metadata(self.fmu, self.output_names)
@@ -257,6 +258,69 @@ class TestCase(object):
             # Simulation at end time
             return dict()
 
+    def imagine(self, u, initial_states):
+        '''Imagine a transition of implementing action u from a model state
+        defined by initial_states. This is similar to advance, but sets the
+        initial states and does not advance in time. 
+        
+        '''
+        
+        # Set final time
+        self.final_time = self.start_time + self.step
+        # Set control inputs if they exist and are written
+        # Check if possible to overwrite
+        if u.keys():
+            # If there are overwriting keys available
+            # Check that any are overwritten
+            written = False
+            for key in u.keys():
+                if u[key]:
+                    written = True
+                    break
+            # If there are, create input object
+            if written:
+                u_list = []
+                u_trajectory = self.start_time
+                for key in u.keys():
+                    if key != 'time' and u[key]:
+                        value = float(u[key])
+                        # Check min/max if not activation input
+                        if '_activate' not in key:
+                            checked_value = self._check_value_min_max(key, value)
+                        else:
+                            checked_value = value
+                        u_list.append(key)
+                        u_trajectory = np.vstack((u_trajectory, checked_value))
+                input_object = (u_list, np.transpose(u_trajectory))
+            # Otherwise, input object is None
+            else:
+                input_object = None
+        # Otherwise, input object is None
+        else:
+            input_object = None
+        # Simulate if not end of test
+        if self.start_time < self.end_time:
+            # Make sure stop at end of test
+            if self.final_time > self.end_time:
+                self.final_time = self.end_time
+            for key in initial_states:
+                self.fmu.set(key, initial_states[key])
+            res = self.__simulation(self.start_time,self.final_time,input_object)
+            # Process results
+            if res is not None:
+                # Get result and store measurement and control inputs
+                self.__get_results(res, store=True, store_initial=False)
+                # Advance start time
+                self.start_time = self.final_time
+
+                return self.y
+
+            else:
+                # Error in simulation
+                return None
+        else:
+            # Simulation at end time
+            return dict()
 
 
     def initialize(self, start_time, warmup_period, end_time=np.inf):

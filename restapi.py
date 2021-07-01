@@ -42,6 +42,13 @@ parser_initialize.add_argument('warmup_period')
 parser_advance = reqparse.RequestParser()
 for key in case.u.keys():
     parser_advance.add_argument(key)
+# ``imagine`` interface
+parser_imagine = reqparse.RequestParser()
+for key in case.u.keys():
+    parser_imagine.add_argument(key)
+for key in case.stat_names:
+    parser_imagine.add_argument('_start_'+key)
+        
 #``forecast_parameters`` interface
 parser_forecast_parameters = reqparse.RequestParser()
 forecast_parameters = ['horizon','interval']
@@ -62,6 +69,16 @@ results_var.add_argument('final_time')
 # --------------------
 class Advance(Resource):
     '''Interface to advance the test case simulation.'''
+
+    def post(self):
+        '''POST request with input data to advance the simulation one step
+        and receive current measurements.'''
+        u = parser_advance.parse_args()
+        y = case.advance(u)
+        return y
+
+class Imagine(Resource):
+    '''Interface to imagine one step of the test case simulation.'''
 
     def post(self):
         '''POST request with input data to advance the simulation one step
