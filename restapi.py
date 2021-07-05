@@ -46,8 +46,10 @@ for key in case.u.keys():
 parser_imagine = reqparse.RequestParser()
 for key in case.u.keys():
     parser_imagine.add_argument(key)
-for key in case.stat_names:
-    parser_imagine.add_argument('_start_'+key)
+# ``set_states`` interface
+parser_set_states = reqparse.RequestParser()
+for key in case.stap_names:
+    parser_set_states.add_argument(key)
         
 #``forecast_parameters`` interface
 parser_forecast_parameters = reqparse.RequestParser()
@@ -81,11 +83,25 @@ class Imagine(Resource):
     '''Interface to imagine one step of the test case simulation.'''
 
     def post(self):
-        '''POST request with input data to advance the simulation one step
-        and receive current measurements.'''
-        u = parser_advance.parse_args()
-        y = case.advance(u)
+        '''POST request with input data to imagine the simulation one step
+        and receive expected measurements after imagined step.'''
+        u = parser_imagine.parse_args()
+        y = case.imagine(u)
+        print('Imagine API call successful with: -------------------------')
+        print(u)
+        # print(y)
         return y
+    
+class Set_States(Resource):
+    '''Interface to set the initial states of the model.'''
+
+    def post(self):
+        '''POST request with input data to set the initial states.'''
+        initial_states = parser_set_states.parse_args()
+        case.set_states(initial_states)
+        print('Initial states API call successful with: -------------------------')
+        print(initial_states)
+        return 201
 
 class Initialize(Resource):
     '''Interface to initialize the test case simulation.'''
@@ -203,6 +219,8 @@ class Name(Resource):
 # ADD REQUESTS TO API WITH URL EXTENSION
 # --------------------------------------
 api.add_resource(Advance, '/advance')
+api.add_resource(Imagine, '/imagine')
+api.add_resource(Set_States, '/set_states')
 api.add_resource(Initialize, '/initialize')
 api.add_resource(Step, '/step')
 api.add_resource(Inputs, '/inputs')

@@ -50,6 +50,13 @@ class TestCase(object):
         self.input_names = self.fmu.get_model_variables(causality = 2).keys()
         self.output_names = self.fmu.get_model_variables(causality = 3).keys()
         self.stat_names = sorted(self.fmu.get_states_list())
+        self.cnst_names = self.fmu.get_model_variables(causality = 0).keys()
+        self.pars_names = self.fmu.get_model_variables(causality = 1).keys()
+        # Get state parameter names used to set initial states
+        self.stap_names = []
+        for p in self.cnst_names + self.pars_names:
+            if '.TSta' in p:
+                self.stap_names.append(p)        
         # Get input and output meta-data
         self.inputs_metadata = self._get_var_metadata(self.fmu, self.input_names, inputs=True)
         self.outputs_metadata = self._get_var_metadata(self.fmu, self.output_names)
@@ -129,13 +136,17 @@ class TestCase(object):
         # Set sample rate
         self.options['ncp'] = int((end_time-start_time)/30)
         # Simulate fmu
-        try:
-            res = self.fmu.simulate(start_time = start_time,
-                                     final_time = end_time,
-                                     options=self.options,
-                                     input=input_object)
-        except Exception as e:
-            return None
+        #=============================================================
+        # try:
+        #=============================================================
+        res = self.fmu.simulate(start_time = start_time,
+                                 final_time = end_time,
+                                 options=self.options,
+                                 input=input_object)
+        #=============================================================
+        # except Exception as e:
+        #     return None
+        #=============================================================
         # Set internal fmu initialization
         self.initialize_fmu = False
 
@@ -196,6 +207,12 @@ class TestCase(object):
 
         '''
 
+        print('Inputs for advance:')
+        print(u)
+        for key in u.keys():
+            print(key)
+            print(u[key])
+            
         # Calculate and store the elapsed time
         if hasattr(self, 'tic_time'):
             self.tac_time = time.time()
@@ -258,13 +275,17 @@ class TestCase(object):
             # Simulation at end time
             return dict()
 
-    def imagine(self, u, initial_states):
-        '''Imagine a transition of implementing action u from a model state
-        defined by initial_states. This is similar to advance, but sets the
-        initial states and does not advance in time. 
+    def imagine(self, u):
+        '''Imagine a transition of implementing action u. This is similar 
+        to advance, but does not increase `self.start_time`. 
         
         '''
         
+        print('Inputs for imagine:')
+        for key in u.keys():
+            print(key)
+            print(u[key])
+            
         # Set final time
         self.final_time = self.start_time + self.step
         # Set control inputs if they exist and are written
@@ -303,16 +324,12 @@ class TestCase(object):
             # Make sure stop at end of test
             if self.final_time > self.end_time:
                 self.final_time = self.end_time
-            for key in initial_states:
-                self.fmu.set(key, initial_states[key])
             res = self.__simulation(self.start_time,self.final_time,input_object)
             # Process results
             if res is not None:
                 # Get result and store measurement and control inputs
                 self.__get_results(res, store=True, store_initial=False)
-                # Advance start time
-                self.start_time = self.final_time
-
+                
                 return self.y
 
             else:
@@ -321,7 +338,19 @@ class TestCase(object):
         else:
             # Simulation at end time
             return dict()
-
+        
+    def set_states(self, initial_states):
+        '''Set the initial states of the fmu model.
+        '''
+        
+        print('Initial states:')
+        print(initial_states)
+        # Set model at estimated initial state
+        for key in initial_states.keys():
+            print(key)
+            print(initial_states[key])
+            r = self.fmu.set(key, float(initial_states[key]))
+            print(r)
 
     def initialize(self, start_time, warmup_period, end_time=np.inf):
         '''Initialize the test simulation.
