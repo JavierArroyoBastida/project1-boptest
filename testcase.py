@@ -207,12 +207,6 @@ class TestCase(object):
 
         '''
 
-        print('Inputs for advance:')
-        print(u)
-        for key in u.keys():
-            print(key)
-            print(u[key])
-            
         # Calculate and store the elapsed time
         if hasattr(self, 'tic_time'):
             self.tac_time = time.time()
@@ -281,11 +275,6 @@ class TestCase(object):
         
         '''
         
-        print('Inputs for imagine:')
-        for key in u.keys():
-            print(key)
-            print(u[key])
-            
         # Set final time
         self.final_time = self.start_time + self.step
         # Set control inputs if they exist and are written
