@@ -98,10 +98,10 @@ class Set_States(Resource):
     def post(self):
         '''POST request with input data to set the initial states.'''
         initial_states = parser_set_states.parse_args()
-        case.set_states(initial_states)
+        y = case.set_states(initial_states)
         print('Initial states API call successful with: -------------------------')
         print(initial_states)
-        return 201
+        return y
 
 class Initialize(Resource):
     '''Interface to initialize the test case simulation.'''

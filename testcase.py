@@ -334,12 +334,32 @@ class TestCase(object):
         
         print('Initial states:')
         print(initial_states)
+        
+        # Reset fmu
+        self.fmu.reset()
+        # Reset simulation data storage
+        # self.__initilize_data()
+        # Set fmu intitialization
+        self.initialize_fmu = True
+        
         # Set model at estimated initial state
-        for key in initial_states.keys():
-            print(key)
-            print(initial_states[key])
-            r = self.fmu.set(key, float(initial_states[key]))
-            print(r)
+        self.fmu.set(initial_states.keys(), initial_states.values())
+        
+        # Simulate fmu for warmup period.
+        # Do not allow negative starting time to avoid confusions
+        res = self.__simulation(self.start_time, self.start_time+self.step)
+        # Process result
+        if res is not None:
+            # Get result
+            self.__get_results(res, store=True, store_initial=True)
+            # Initialize KPI Calculator
+            # self.cal.initialize()
+            return self.y
+
+        else:
+
+            return None
+        
 
     def initialize(self, start_time, warmup_period, end_time=np.inf):
         '''Initialize the test simulation.
