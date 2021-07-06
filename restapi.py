@@ -46,7 +46,6 @@ for key in case.u.keys():
 parser_imagine = reqparse.RequestParser()
 for key in case.stap_names:
     parser_imagine.add_argument(key)
-        
 #``forecast_parameters`` interface
 parser_forecast_parameters = reqparse.RequestParser()
 forecast_parameters = ['horizon','interval']
@@ -109,6 +108,14 @@ class Step(Resource):
         step = args['step']
         case.set_step(step)
         return step, 201
+
+class Advance_Time_Only(Resource):
+    '''Interface to advance case time without simulation.'''
+
+    def put(self):
+        '''PUT request to advance case time one step period.'''
+        case.advance_time_only()
+        return 201
 
 class Inputs(Resource):
     '''Interface to test case inputs.'''
@@ -203,6 +210,7 @@ api.add_resource(Advance, '/advance')
 api.add_resource(Imagine, '/imagine')
 api.add_resource(Initialize, '/initialize')
 api.add_resource(Step, '/step')
+api.add_resource(Advance_Time_Only, '/advance_time_only')
 api.add_resource(Inputs, '/inputs')
 api.add_resource(Measurements, '/measurements')
 api.add_resource(Results, '/results')

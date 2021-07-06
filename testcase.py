@@ -347,6 +347,14 @@ class TestCase(object):
 
             return None
 
+    def advance_time_only(self):
+        '''Artificially advance start_time one step period without any 
+        simulation.'''
+        
+        self.start_time = self.start_time + self.step
+        
+        return None
+
     def get_step(self):
         '''Returns the current simulation step in seconds.'''
 
