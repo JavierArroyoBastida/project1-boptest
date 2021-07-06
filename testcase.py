@@ -269,67 +269,10 @@ class TestCase(object):
             # Simulation at end time
             return dict()
 
-    def imagine(self, u):
-        '''Imagine a transition of implementing action u. This is similar 
-        to advance, but does not increase `self.start_time`. 
+    def imagine(self, initial_states):
+        '''Set the initial states of the fmu model and imagine one 
+        transition step.
         
-        '''
-        
-        # Set final time
-        self.final_time = self.start_time + self.step
-        # Set control inputs if they exist and are written
-        # Check if possible to overwrite
-        if u.keys():
-            # If there are overwriting keys available
-            # Check that any are overwritten
-            written = False
-            for key in u.keys():
-                if u[key]:
-                    written = True
-                    break
-            # If there are, create input object
-            if written:
-                u_list = []
-                u_trajectory = self.start_time
-                for key in u.keys():
-                    if key != 'time' and u[key]:
-                        value = float(u[key])
-                        # Check min/max if not activation input
-                        if '_activate' not in key:
-                            checked_value = self._check_value_min_max(key, value)
-                        else:
-                            checked_value = value
-                        u_list.append(key)
-                        u_trajectory = np.vstack((u_trajectory, checked_value))
-                input_object = (u_list, np.transpose(u_trajectory))
-            # Otherwise, input object is None
-            else:
-                input_object = None
-        # Otherwise, input object is None
-        else:
-            input_object = None
-        # Simulate if not end of test
-        if self.start_time < self.end_time:
-            # Make sure stop at end of test
-            if self.final_time > self.end_time:
-                self.final_time = self.end_time
-            res = self.__simulation(self.start_time,self.final_time,input_object)
-            # Process results
-            if res is not None:
-                # Get result and store measurement and control inputs
-                self.__get_results(res, store=True, store_initial=False)
-                
-                return self.y
-
-            else:
-                # Error in simulation
-                return None
-        else:
-            # Simulation at end time
-            return dict()
-        
-    def set_states(self, initial_states):
-        '''Set the initial states of the fmu model.
         '''
         
         print('Initial states:')
@@ -337,29 +280,23 @@ class TestCase(object):
         
         # Reset fmu
         self.fmu.reset()
-        # Reset simulation data storage
-        # self.__initilize_data()
         # Set fmu intitialization
         self.initialize_fmu = True
         
         # Set model at estimated initial state
         self.fmu.set(initial_states.keys(), initial_states.values())
         
-        # Simulate fmu for warmup period.
-        # Do not allow negative starting time to avoid confusions
+        # Simulate fmu for one step period without advancing start time
         res = self.__simulation(self.start_time, self.start_time+self.step)
         # Process result
         if res is not None:
             # Get result
             self.__get_results(res, store=True, store_initial=True)
-            # Initialize KPI Calculator
-            # self.cal.initialize()
             return self.y
 
         else:
 
             return None
-        
 
     def initialize(self, start_time, warmup_period, end_time=np.inf):
         '''Initialize the test simulation.

@@ -44,12 +44,8 @@ for key in case.u.keys():
     parser_advance.add_argument(key)
 # ``imagine`` interface
 parser_imagine = reqparse.RequestParser()
-for key in case.u.keys():
-    parser_imagine.add_argument(key)
-# ``set_states`` interface
-parser_set_states = reqparse.RequestParser()
 for key in case.stap_names:
-    parser_set_states.add_argument(key)
+    parser_imagine.add_argument(key)
         
 #``forecast_parameters`` interface
 parser_forecast_parameters = reqparse.RequestParser()
@@ -80,27 +76,12 @@ class Advance(Resource):
         return y
 
 class Imagine(Resource):
-    '''Interface to imagine one step of the test case simulation.'''
+    '''Interface to imagine a model step.'''
 
     def post(self):
-        '''POST request with input data to imagine the simulation one step
-        and receive expected measurements after imagined step.'''
-        u = parser_imagine.parse_args()
-        y = case.imagine(u)
-        print('Imagine API call successful with: -------------------------')
-        print(u)
-        # print(y)
-        return y
-    
-class Set_States(Resource):
-    '''Interface to set the initial states of the model.'''
-
-    def post(self):
-        '''POST request with input data to set the initial states.'''
-        initial_states = parser_set_states.parse_args()
-        y = case.set_states(initial_states)
-        print('Initial states API call successful with: -------------------------')
-        print(initial_states)
+        '''POST request with input data to imagine a model step.'''
+        initial_states = parser_imagine.parse_args()
+        y = case.imagine(initial_states)
         return y
 
 class Initialize(Resource):
@@ -220,7 +201,6 @@ class Name(Resource):
 # --------------------------------------
 api.add_resource(Advance, '/advance')
 api.add_resource(Imagine, '/imagine')
-api.add_resource(Set_States, '/set_states')
 api.add_resource(Initialize, '/initialize')
 api.add_resource(Step, '/step')
 api.add_resource(Inputs, '/inputs')
