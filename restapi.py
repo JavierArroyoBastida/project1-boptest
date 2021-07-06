@@ -46,6 +46,8 @@ for key in case.u.keys():
 parser_imagine = reqparse.RequestParser()
 for key in case.stap_names:
     parser_imagine.add_argument(key)
+for key in case.u.keys():
+    parser_imagine.add_argument(key)
 #``forecast_parameters`` interface
 parser_forecast_parameters = reqparse.RequestParser()
 forecast_parameters = ['horizon','interval']
@@ -79,8 +81,17 @@ class Imagine(Resource):
 
     def post(self):
         '''POST request with input data to imagine a model step.'''
-        initial_states = parser_imagine.parse_args()
-        y = case.imagine(initial_states)
+        
+        states_and_inputs = parser_imagine.parse_args()
+        print('states_and_inputs:')
+        print(states_and_inputs)
+        
+        # Filter states and inputs
+        initial_states =    {k: states_and_inputs[k] for k in case.stap_names}
+        u =                 {k: states_and_inputs[k] for k in case.u.keys()}
+        
+        y = case.imagine(initial_states, u)
+        
         return y
 
 class Initialize(Resource):

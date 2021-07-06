@@ -269,14 +269,16 @@ class TestCase(object):
             # Simulation at end time
             return dict()
 
-    def imagine(self, initial_states):
+    def imagine(self, initial_states, u):
         '''Set the initial states of the fmu model and imagine one 
         transition step.
         
         '''
         
-        print('Initial states:')
+        print('Initial states in the test case:')
         print(initial_states)
+        print('Inputs in the test case:')
+        print(u)
         
         # Reset fmu
         self.fmu.reset()
@@ -286,8 +288,40 @@ class TestCase(object):
         # Set model at estimated initial state
         self.fmu.set(initial_states.keys(), initial_states.values())
         
+        # Set control inputs if they exist and are written
+        # Check if possible to overwrite
+        if u.keys():
+            # If there are overwriting keys available
+            # Check that any are overwritten
+            written = False
+            for key in u.keys():
+                if u[key]:
+                    written = True
+                    break
+            # If there are, create input object
+            if written:
+                u_list = []
+                u_trajectory = self.start_time
+                for key in u.keys():
+                    if key != 'time' and u[key]:
+                        value = float(u[key])
+                        # Check min/max if not activation input
+                        if '_activate' not in key:
+                            checked_value = self._check_value_min_max(key, value)
+                        else:
+                            checked_value = value
+                        u_list.append(key)
+                        u_trajectory = np.vstack((u_trajectory, checked_value))
+                input_object = (u_list, np.transpose(u_trajectory))
+            # Otherwise, input object is None
+            else:
+                input_object = None
+        # Otherwise, input object is None
+        else:
+            input_object = None
+            
         # Simulate fmu for one step period without advancing start time
-        res = self.__simulation(self.start_time, self.start_time+self.step)
+        res = self.__simulation(self.start_time,self.start_time+self.step,input_object)
         # Process result
         if res is not None:
             # Get result
