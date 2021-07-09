@@ -280,13 +280,11 @@ class TestCase(object):
         print('Inputs in the test case:')
         print(u)
         
-        # Reset fmu
-        self.fmu.reset()
-        # Set fmu intitialization
-        self.initialize_fmu = True
-        
+        # Initialize test case to current time without simulation
+        self.initialize(start_time=self.start_time, warmup_period=0)
+                   
         # Set model at estimated initial state
-        self.fmu.set(initial_states.keys(), initial_states.values())
+        self.fmu.set(list(initial_states.keys()), list(initial_states.values()))
         
         # Set control inputs if they exist and are written
         # Check if possible to overwrite
