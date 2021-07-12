@@ -281,10 +281,8 @@ class TestCase(object):
         print(u)
         
         # Initialize test case to current time without simulation
-        self.initialize(start_time=self.start_time, warmup_period=0)
-                   
-        # Set model at estimated initial state
-        self.fmu.set(list(initial_states.keys()), list(initial_states.values()))
+        self.initialize(start_time=self.start_time, warmup_period=0, initial_states=initial_states)
+        
         
         # Set control inputs if they exist and are written
         # Check if possible to overwrite
@@ -330,7 +328,7 @@ class TestCase(object):
 
             return None
 
-    def initialize(self, start_time, warmup_period, end_time=np.inf):
+    def initialize(self, start_time, warmup_period, end_time=np.inf, initial_states=None):
         '''Initialize the test simulation.
 
         Parameters
@@ -353,6 +351,11 @@ class TestCase(object):
 
         # Reset fmu
         self.fmu.reset()
+        # Set model at estimated initial state if provided
+        if initial_states is not None:
+            self.fmu.set(list(initial_states.keys()), list(initial_states.values()))
+        # For some reason the gA parameter could not be set as a modifier in the model:
+        self.fmu.set(["mod.bui.zon.win[1].gA"],[27.4649393243641])
         # Reset simulation data storage
         self.__initilize_data()
         self.elapsed_control_time_ratio =np.array([])
