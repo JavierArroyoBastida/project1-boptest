@@ -83,6 +83,8 @@ class TestCase(object):
         self.cal = KPI_Calculator(testcase=self)
         # Set default scenario
         self.set_scenario(con['scenario'])
+        # Set debug parameter to true to print logs in the test case
+        self.debug = False
 
     def __initilize_data(self):
         '''Initializes objects for simulation data storage.
@@ -283,6 +285,10 @@ class TestCase(object):
         # Initialize test case to current time without simulation
         self.initialize(start_time=self.start_time, warmup_period=0, initial_states=initial_states)
         
+        print('And in the fmu after setting start values:')
+        for s in initial_states.keys():
+            print(self.fmu.get(s))
+            print(self.fmu.get(s.replace('.heaPor.T','.TSta')))
         
         # Set control inputs if they exist and are written
         # Check if possible to overwrite
@@ -318,6 +324,36 @@ class TestCase(object):
             
         # Simulate fmu for one step period without advancing start time
         res = self.__simulation(self.start_time,self.start_time+self.step,input_object)
+        if self.debug:
+            print('reaTZon_y result from imagine:')
+            print(res['reaTZon_y'])
+            print('Inspecting parameters:')
+            print(self.fmu.get("mod.bui.hea.a_con"))
+            print(self.fmu.get("mod.bui.hea.a_eva"))
+            print(self.fmu.get("mod.bui.hea.b_con"))
+            print(self.fmu.get("mod.bui.hea.b_eva"))
+            print(self.fmu.get("mod.bui.hea.c_con"))
+            print(self.fmu.get("mod.bui.hea.c_eva"))
+            print(self.fmu.get("mod.bui.hea.cFlo"))
+            print(self.fmu.get("mod.bui.hea.capFlo.TSta"))
+            print(self.fmu.get("mod.bui.hea.k_con"))
+            print(self.fmu.get("mod.bui.hea.k_eva"))
+            print(self.fmu.get("mod.bui.hea.rFlo2"))
+            print(self.fmu.get("mod.bui.zon.cEmb"))
+            print(self.fmu.get("mod.bui.zon.cInt"))
+            print(self.fmu.get("mod.bui.zon.cWal"))
+            print(self.fmu.get("mod.bui.zon.cZon"))
+            print(self.fmu.get("mod.bui.zon.capEmb.TSta"))
+            print(self.fmu.get("mod.bui.zon.capInt.TSta"))
+            print(self.fmu.get("mod.bui.zon.capWal.TSta"))
+            print(self.fmu.get("mod.bui.zon.capZon.TSta"))
+            print(self.fmu.get("mod.bui.zon.fGai"))
+            print(self.fmu.get("mod.bui.zon.rEmb"))
+            print(self.fmu.get("mod.bui.zon.rInf"))
+            print(self.fmu.get("mod.bui.zon.rInt"))
+            print(self.fmu.get("mod.bui.zon.rWal"))
+            print(self.fmu.get("mod.bui.zon.win[1].gA"))
+        
         # Process result
         if res is not None:
             # Get result
