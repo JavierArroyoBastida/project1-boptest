@@ -72,7 +72,7 @@ class Advance(Resource):
     def post(self):
         '''POST request with input data to advance the simulation one step
         and receive current measurements.'''
-        u = parser_advance.parse_args()
+        u = parser_advance.parse_args(strict=True)
         y = case.advance(u)
         return y
 
@@ -99,7 +99,7 @@ class Initialize(Resource):
 
     def put(self):
         '''PUT request to initialize the test.'''
-        args = parser_initialize.parse_args()
+        args = parser_initialize.parse_args(strict=True)
         start_time = float(args['start_time'])
         warmup_period = float(args['warmup_period'])
         y = case.initialize(start_time,warmup_period)
@@ -115,7 +115,7 @@ class Step(Resource):
 
     def put(self):
         '''PUT request to set simulation step in seconds.'''
-        args = parser_step.parse_args()
+        args = parser_step.parse_args(strict=True)
         step = args['step']
         case.set_step(step)
         return step, 201
@@ -149,7 +149,7 @@ class Results(Resource):
 
     def put(self):
         '''PUT request to receive measurement data.'''
-        args = results_var.parse_args()
+        args = results_var.parse_args(strict=True)
         var  = args['point_name']
         start_time  = float(args['start_time'])
         final_time  = float(args['final_time'])
@@ -177,7 +177,7 @@ class Forecast_Parameters(Resource):
 
     def put(self):
         '''PUT request to set forecast horizon and interval inseconds.'''
-        args = parser_forecast_parameters.parse_args()
+        args = parser_forecast_parameters.parse_args(strict=True)
         horizon  = args['horizon']
         interval = args['interval']
         case.set_forecast_parameters(horizon, interval)
@@ -202,7 +202,7 @@ class Scenario(Resource):
 
     def put(self):
         '''PUT request to set scenario.'''
-        scenario = parser_scenario.parse_args()
+        scenario = parser_scenario.parse_args(strict=True)
         result = case.set_scenario(scenario)
         return result
 
@@ -213,6 +213,14 @@ class Name(Resource):
         '''GET request to receive test case name.'''
         name = case.get_name()
         return name
+
+class Version(Resource):
+    '''Interface to BOPTEST version.'''
+
+    def get(self):
+        '''GET request to receive BOPTEST version.'''
+        version = case.get_version()
+        return version
 # --------------------
 
 # ADD REQUESTS TO API WITH URL EXTENSION
@@ -230,6 +238,7 @@ api.add_resource(Forecast_Parameters, '/forecast_parameters')
 api.add_resource(Forecast, '/forecast')
 api.add_resource(Scenario, '/scenario')
 api.add_resource(Name, '/name')
+api.add_resource(Version, '/version')
 # --------------------------------------
 
 if __name__ == '__main__':
