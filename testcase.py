@@ -82,7 +82,7 @@ class TestCase(object):
         # Initialize test case
         self.initialize(self.config_json['start_time'], self.config_json['warmup_period'])
         # Set default scenario
-        self.set_scenario(con['scenario'])
+        self.set_scenario(self.config_json['scenario'])
         # Set debug parameter to true to print logs in the test case
         self.debug = False
     def __initilize_data(self):
@@ -390,7 +390,10 @@ class TestCase(object):
         if initial_states is not None:
             self.fmu.set(list(initial_states.keys()), list(initial_states.values()))
         # For some reason the gA parameter could not be set as a modifier in the model:
-        self.fmu.set(["mod.bui.zon.win[1].gA"],[27.4649393243641])
+        try:
+            self.fmu.set(["mod.bui.zon.win[1].gA"],[27.4649393243641])
+        except:
+            pass
         # Reset simulation data storage
         self.__initilize_data()
         self.elapsed_control_time_ratio =np.array([])

@@ -49,8 +49,8 @@ compile_testcase_model:
 	make copy_to_jm ARGS=parsing
 	make copy_to_jm ARGS=data
 	make copy_to_jm ARGS=testcases/${TESTCASE}
-	docker cp C:\\Users\\u0110910\\workspace\\BOPTEST-control\\RSH_HP\\models\\RSHHPModels ${IMG_NAME}:/usr/local/testing/bestest_hydronic_heat_pump_simple/models
-	docker cp C:\\Users\\u0110910\\workspace\\GreyBoxToolbox\\FastBuildings\\FastBuildings ${IMG_NAME}:/home/developer/MODELICAPATH	
+	docker cp C:\\workspace\\BOPTEST-control\\RSH_HP\\models\\RSHHPModels ${IMG_NAME}:/usr/local/testing/bestest_hydronic_heat_pump_simple/models
+	docker cp C:\\workspace\\GreyBoxToolbox\\FastBuildings\\FastBuildings ${IMG_NAME}:/home/developer/MODELICAPATH	
 	make exec_jm ARGS="python set_library_versions.py ${TESTCASE} && cd ${TESTCASE}/models && python compile_fmu.py"
 	make copy_testcase_from_jm ARGS=${TESTCASE}/models/wrapped.fmu
 	make copy_testcase_from_jm ARGS=${TESTCASE}/models/wrapped.mo
