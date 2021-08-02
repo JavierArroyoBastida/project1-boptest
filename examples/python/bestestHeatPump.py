@@ -19,6 +19,7 @@ from matplotlib import pyplot as plt
 # Add BOPTEST repository to PYTHONPATH for this example
 sys.path.insert(0, str(pathlib.Path(__file__).absolute().parents[2]))
 
+# Generate conflict
 # Set URL for the BOPTEST service
 url = 'http://ec2-23-20-252-119.compute-1.amazonaws.com'
 
