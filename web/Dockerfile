@@ -10,6 +10,8 @@ COPY web/server/package.json web/server/package-lock.json /root/server/
 COPY version.txt /boptest/
 
 WORKDIR /root/server
+RUN npm uninstall node-sass
+RUN npm install node-sass
 RUN npm install
 
 WORKDIR /root/server
