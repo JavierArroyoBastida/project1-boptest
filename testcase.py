@@ -159,7 +159,7 @@ class TestCase(object):
         # Set fmu initialization option
         self.options['initialize'] = self.initialize_fmu
         # Set sample rate
-        self.options['ncp'] = int((end_time-start_time)/30)
+        self.options['ncp'] = int((end_time-start_time)/10)
         # Simulate fmu
         try:
             res = self.fmu.simulate(start_time=start_time,
