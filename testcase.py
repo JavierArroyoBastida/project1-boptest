@@ -83,9 +83,9 @@ class TestCase(object):
         self.__initilize_data()
         # Set default fmu simulation options
         self.options = self.fmu.simulate_options()
-        self.options['CVode_options']['rtol'] = 1e-6
-        self.options['CVode_options']['store_event_points'] = False
-        self.options['filter'] = self.output_names + self.input_names
+        # self.options['CVode_options']['rtol'] = 1e-6
+        # self.options['CVode_options']['store_event_points'] = False
+        self.options['filter'] = list(self.output_names) + list(self.input_names)
         # Instantiate a KPI calculator for the test case
         self.cal = KPI_Calculator(testcase=self)
         # Initialize test case
