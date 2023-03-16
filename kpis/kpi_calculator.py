@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.integrate import trapz
-from flask._compat import iteritems
 from collections import OrderedDict
 
 class KPI_Calculator(object):
