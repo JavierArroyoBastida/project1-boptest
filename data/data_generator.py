@@ -9,8 +9,10 @@ include: weather data, price profiles, occupancy schedules, emission
 factors, internal gain schedules and temperature set points for a whole year.
 
 '''
-
-from pymodelica import compile_fmu
+try:
+    from pymodelica import compile_fmu
+except:
+    pass
 from pyfmi import load_fmu
 from scipy import interpolate
 import pandas as pd
