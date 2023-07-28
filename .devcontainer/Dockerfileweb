@@ -1,0 +1,31 @@
+FROM jekyll/builder:3 
+# I got it working with :latest
+WORKDIR /srv/jekyll
+
+# Use the Gemfile to install dependencies for Jekyll website
+# somehow this does not persist
+# Bundled gems are installed into `/usr/local/bundle` - see Makefile
+COPY web/Gemfile .
+RUN bundle install
+
+# Build the Jekyll website
+# RUN jekyll build
+
+# RUN useradd -ms /bin/bash developer
+# ENV HOME /home/developer
+
+# Install Python and pip for Python 3
+RUN apk add --update python3 py3-pip
+
+# Install build dependencies (if needed for your Python packages)
+RUN apk add --virtual .build-deps gcc python3-dev musl-dev
+
+# Install Sphinx
+RUN pip3 install sphinx sphinx_bootstrap_theme
+RUN pip3 install sphinxcontrib-bibtex
+
+# https://johnsiu.com/blog/alpine-vscode/
+RUN apk add gcompat libstdc++ wget curl bash git
+
+# Remove build dependencies (if applicable)
+RUN apk del .build-deps
