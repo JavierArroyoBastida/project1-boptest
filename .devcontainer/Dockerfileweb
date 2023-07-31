@@ -1,31 +1,50 @@
-FROM jekyll/builder:3 
-# I got it working with :latest
-WORKDIR /srv/jekyll
+# Start with a base Ubuntu image
+FROM ubuntu:20.04
+
+# Avoid warnings while installing ubuntu
+# debconf: unable to initialize frontend: Dialog
+# debconf: (TERM is not set, so the dialog frontend is not usable.)
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Install packages
+RUN apt update && \
+    apt install -y --no-install-recommends\
+    git \
+    python3.9 \
+    python3-pip  \
+    build-essential \
+    && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install sphinx dependencies
+RUN pip install \
+    sphinx \
+    sphinx_bootstrap_theme \
+    sphinxcontrib-bibtex 
+
+RUN apt update && \
+    apt install -y --no-install-recommends\
+    ruby-dev \
+    && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN gem install jekyll -v 4.1.0
+RUN gem install bundler -v 2.1.4
+
+# Add developer user 
+# RUN useradd -ms /bin/bash developer
+# USER developer
+
+# Add developer user with permissions in the working directory
+ENV HOME /home
+ENV WORKDIR /home
+RUN mkdir -m 1777 ${HOME}/boptest
+ENV PYTHONPATH ${HOME}/boptest
 
 # Use the Gemfile to install dependencies for Jekyll website
 # somehow this does not persist
 # Bundled gems are installed into `/usr/local/bundle` - see Makefile
-COPY web/Gemfile .
-RUN bundle install
 
-# Build the Jekyll website
-# RUN jekyll build
-
-# RUN useradd -ms /bin/bash developer
-# ENV HOME /home/developer
-
-# Install Python and pip for Python 3
-RUN apk add --update python3 py3-pip
-
-# Install build dependencies (if needed for your Python packages)
-RUN apk add --virtual .build-deps gcc python3-dev musl-dev
-
-# Install Sphinx
-RUN pip3 install sphinx sphinx_bootstrap_theme
-RUN pip3 install sphinxcontrib-bibtex
-
-# https://johnsiu.com/blog/alpine-vscode/
-RUN apk add gcompat libstdc++ wget curl bash git
-
-# Remove build dependencies (if applicable)
-RUN apk del .build-deps
+# RUN cd $WORKDIR && \
+#     bundle install && \
+#     make build_and_test
