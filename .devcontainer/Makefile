@@ -1,4 +1,9 @@
+# Set $ROOT to top-level directory of the repository
+ROOT ?= $(shell dirname \
+  $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))))
+
 IMG_NAME=boptestweb
+IMG_HOME=/home
 
 build:
 	docker build -f Dockerfileweb \
@@ -13,12 +18,15 @@ build-no-cache:
 
 run:
 	docker run \
+		--privileged \
 		--name ${IMG_NAME} \
 		--platform=linux/amd64 \
 		--detach=false \
 		--network=host \
 		--rm \
-		-v /Users/u0110910/workspace/BOPTEST:/srv \
+		-e TMPDIR=/tmp \
+		-v ${ROOT}:${IMG_HOME}/boptest:rw \
+		-w ${IMG_HOME}/boptest/web \
 		-it \
 		${IMG_NAME} /bin/bash
 
