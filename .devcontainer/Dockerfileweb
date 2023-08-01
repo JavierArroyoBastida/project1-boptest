@@ -35,10 +35,7 @@ RUN gem install bundler -v 2.1.4
 ENV HOME /home
 ENV WORKDIR /home
 
-# Use the Gemfile to install dependencies for Jekyll website
-# somehow this does not persist
-# Bundled gems are installed into `/usr/local/bundle` - see Makefile
-
-# RUN cd $WORKDIR && \
-#     bundle install && \
-#     make build_and_test
+# Use the Gemfile and Gemfile.lock to install dependencies for Jekyll website
+COPY web/Gemfile .
+COPY web/Gemfile.lock .
+RUN bundle install
