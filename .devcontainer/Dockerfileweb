@@ -31,15 +31,9 @@ RUN apt update && \
 RUN gem install jekyll -v 4.1.0
 RUN gem install bundler -v 2.1.4
 
-# Add developer user 
-# RUN useradd -ms /bin/bash developer
-# USER developer
-
 # Add developer user with permissions in the working directory
 ENV HOME /home
 ENV WORKDIR /home
-RUN mkdir -m 1777 ${HOME}/boptest
-ENV PYTHONPATH ${HOME}/boptest
 
 # Use the Gemfile to install dependencies for Jekyll website
 # somehow this does not persist

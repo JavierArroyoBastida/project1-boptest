@@ -18,13 +18,11 @@ build-no-cache:
 
 run:
 	docker run \
-		--privileged \
 		--name ${IMG_NAME} \
 		--platform=linux/amd64 \
 		--detach=false \
 		--network=host \
 		--rm \
-		-e TMPDIR=/tmp \
 		-v ${ROOT}:${IMG_HOME}/boptest:rw \
 		-w ${IMG_HOME}/boptest/web \
 		-it \
