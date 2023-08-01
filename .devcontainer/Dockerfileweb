@@ -13,6 +13,7 @@ RUN apt update && \
     python3.9 \
     python3-pip  \
     build-essential \
+    ruby-dev \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -21,12 +22,6 @@ RUN pip install \
     sphinx \
     sphinx_bootstrap_theme \
     sphinxcontrib-bibtex 
-
-RUN apt update && \
-    apt install -y --no-install-recommends\
-    ruby-dev \
-    && \
-    rm -rf /var/lib/apt/lists/*
 
 RUN gem install jekyll -v 4.1.0
 RUN gem install bundler -v 2.1.4
