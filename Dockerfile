@@ -24,7 +24,7 @@ RUN conda install -c conda-forge pyfmi
 
 RUN conda install -c conda-forge matplotlib
 RUN conda install pandas requests
-RUN conda install -c anaconda flask flask-restful flask_cors
+RUN conda install -c anaconda flask flask-restful==0.3.9 flask_cors
 
 ENV HOME /home/developer
 WORKDIR $HOME
