@@ -67,39 +67,39 @@ case = TestCase()
 # -----------------------
 # ``step`` interface
 parser_step = reqparse.RequestParser(argument_class=CustomArgument)
-parser_step.add_argument('step', required=True, location='json')
+parser_step.add_argument('step', required=True)
 
 # ``initialize`` interface
 parser_initialize = reqparse.RequestParser(argument_class=CustomArgument)
-parser_initialize.add_argument('start_time', required=True, location='json')
-parser_initialize.add_argument('warmup_period', required=True, location='json')
+parser_initialize.add_argument('start_time', required=True)
+parser_initialize.add_argument('warmup_period', required=True)
 # ``advance`` interface
 parser_advance = reqparse.RequestParser(argument_class=CustomArgument)
 for key in case.u.keys():
     if key != 'time':
-        parser_advance.add_argument(key, location='json')
+        parser_advance.add_argument(key, type=float)
 # ``price_scenario`` interface
 parser_scenario = reqparse.RequestParser(argument_class=CustomArgument)
-parser_scenario.add_argument('electricity_price', type=str, location='json')
-parser_scenario.add_argument('time_period', type=str, location='json')
+parser_scenario.add_argument('electricity_price', type=str)
+parser_scenario.add_argument('time_period', type=str)
 # ``forecast`` interface
 parser_forecast_points = reqparse.RequestParser(argument_class=CustomArgument)
-parser_forecast_points.add_argument('point_names', type=list, action='append', required=True, location='json')
+parser_forecast_points.add_argument('point_names', type=list, action='append', required=True)
 forecast_parameters = ['horizon', 'interval']
 for arg in forecast_parameters:
-    parser_forecast_points.add_argument(arg, required=True, location='json')
+    parser_forecast_points.add_argument(arg, required=True)
 # ``results`` interface
 results_var = reqparse.RequestParser(argument_class=CustomArgument)
-results_var.add_argument('point_names', type=list, action='append', required=True, location='json')
-results_var.add_argument('start_time', required=True, location='json')
-results_var.add_argument('final_time', required=True, location='json')
+results_var.add_argument('point_names', type=list, action='append', required=True)
+results_var.add_argument('start_time', required=True)
+results_var.add_argument('final_time', required=True)
 # ``submit`` interface
 submit_var = reqparse.RequestParser(argument_class=CustomArgument)
-submit_var.add_argument('api_key', type=str, required=True, location='json')
+submit_var.add_argument('api_key', type=str, required=True)
     # add up to 10 tags
 for i in range(10):
-    submit_var.add_argument('tag{0}'.format(i+1), type=str, location='json')
-submit_var.add_argument('unit_test', location='json')
+    submit_var.add_argument('tag{0}'.format(i+1), type=str)
+submit_var.add_argument('unit_test')
 # -----------------------
 
 

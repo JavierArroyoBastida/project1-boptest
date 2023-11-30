@@ -1,41 +1,43 @@
 FROM ubuntu:20.04
-# This is the Focal Fossa ubuntu version
-MAINTAINER Javier Arroyo <javier.arroyo@kuleuven.be>
 
-# Avoid warnings while installing ubuntu
-# debconf: unable to initialize frontend: Dialog
-# debconf: (TERM is not set, so the dialog frontend is not usable.)
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+# Install required packages
+RUN 	apt-get update && \
+    	apt-get install -y \
+    	wget \
+    	libgfortran4
 
-# Install packages
-RUN apt update && \
-    apt install -y \
-    git \
-    wget  && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+# Install commands for Spawn
+ENV SPAWN_VERSION=0.3.0-8d93151657
+RUN wget https://spawn.s3.amazonaws.com/custom/Spawn-$SPAWN_VERSION-Linux.tar.gz \
+    && tar -xzf Spawn-$SPAWN_VERSION-Linux.tar.gz \
+    && ln -s /Spawn-$SPAWN_VERSION-Linux/bin/spawn-$SPAWN_VERSION /usr/local/bin/
 
-# Install pyfmi using miniconda
-ENV CONDA_DIR /opt/conda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-     /bin/bash ~/miniconda.sh -b -p /opt/conda
-ENV PATH=$CONDA_DIR/bin:$PATH
-RUN conda install -c conda-forge pyfmi
+# Create new user
+RUN 	useradd -ms /bin/bash user
+USER user
+ENV 	HOME /home/user
 
-RUN conda install -c conda-forge matplotlib
-RUN conda install pandas requests
-RUN conda install -c anaconda flask flask-restful==0.3.9 flask_cors
+# Download and install miniconda and pyfmi
+RUN 	cd $HOME && \
+	wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.1.0-1-Linux-x86_64.sh -O $HOME/miniconda.sh && \
+	/bin/bash $HOME/miniconda.sh -b -p $HOME/miniconda && \
+	. miniconda/bin/activate && \
+	conda update -n base -c defaults conda && \
+	conda create --name pyfmi3 python=3.10 -y && \
+	conda activate pyfmi3 && \
+	conda install -c conda-forge pyfmi=2.11 -y && \
+	pip install flask-restful==0.3.9 werkzeug==2.2.3 && \
+	conda install pandas==1.5.3 flask_cors==3.0.10 matplotlib==3.7.1 requests==2.28.1
 
-ENV HOME /home/developer
 WORKDIR $HOME
 
 RUN mkdir models && \
     mkdir doc
 
 ENV PYTHONPATH $PYTHONPATH:$HOME
-ENV BOPTEST_DASHBOARD_SERVER https://api.boptest.net:8081/
+ENV BOPTEST_DASHBOARD_SERVER https://dashboard.boptest.net/
 
-CMD python restapi.py && bash
+CMD . miniconda/bin/activate && conda activate pyfmi3 && python restapi.py && bash
 
 EXPOSE 5000
 
