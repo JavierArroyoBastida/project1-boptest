@@ -215,6 +215,56 @@ class KPI_Calculator(object):
 
         return ckpi
 
+    def get_analysis(self, price_scenario='Constant'):
+        '''Return a full analysis of the test case results. 
+
+        Parameters
+        ----------
+        price_scenario : str, optional
+            Price scenario for cost kpi calculation.
+            'Constant' or 'Dynamic' or 'HighlyDynamic'.
+            Default is 'Constant'.
+
+        Returns
+        -------
+        analysis : dict
+            Dictionary with other three dictionaries:
+            kpi_cor : dict
+                Dictionary with the core KPIs, i.e., the KPIs
+                that are considered essential for the comparison between
+                two test cases.
+            kpi_ele : dict
+                Nested dictionary with KPIs grouped by element.
+            kpi_src : dict
+                Nested dictionary with KPIs grouped by source for 
+                energy, cost and emissions.  
+
+        '''
+
+        kpi_cor = self.get_core_kpis(price_scenario=price_scenario)
+        
+        kpi_ele = OrderedDict()
+        kpi_ele['tdis_ele'] = self.tdis_dict
+        kpi_ele['idis_ele'] = self.idis_dict 
+        kpi_ele['ener_ele'] = self.ener_dict
+        kpi_ele['cost_ele'] = self.cost_dict
+        kpi_ele['emis_ele'] = self.emis_dict
+        kpi_ele['pele_ele'] = self.pele_dict
+        kpi_ele['pgas_ele'] = self.pgas_dict
+        kpi_ele['pdih_ele'] = self.pdih_dict
+        
+        kpi_src = OrderedDict()
+        kpi_src['ener_src'] = self.ener_dict_by_source
+        kpi_src['cost_src'] = self.cost_dict_by_source
+        kpi_src['emis_src'] = self.emis_dict_by_source
+
+        analysis = OrderedDict()
+        analysis['kpi_cor'] = kpi_cor
+        analysis['kpi_ele'] = kpi_ele
+        analysis['kpi_src'] = kpi_src
+
+        return analysis
+
     def get_thermal_discomfort(self):
         '''The thermal discomfort is the integral of the deviation
         of the temperature with respect to the predefined comfort
