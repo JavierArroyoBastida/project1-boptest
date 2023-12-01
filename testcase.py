@@ -158,11 +158,11 @@ class TestCase(object):
         self.options['initialize'] = self.initialize_fmu
         # Set sample rate
         step = end_time - start_time
-        if step >= 30:
-            self.options['ncp'] = int((end_time-start_time)/30)
+        if step >= 60:
+            self.options['ncp'] = int((end_time-start_time)/60)
         elif step == 0:
             pass
-        elif (step < 30) and (step > 0):
+        elif (step < 60) and (step > 0):
             self.options['ncp'] = int((end_time-start_time)/step)
         # Simulate fmu
         try:
