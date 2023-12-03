@@ -215,8 +215,10 @@ class KPI_Calculator(object):
 
         return ckpi
 
-    def get_analysis(self, price_scenario='Constant'):
-        '''Return a full analysis of the test case results. 
+    def get_kpis_absolute(self, price_scenario='Constant'):
+        '''Return the core KPIs of a test case disaggregated and 
+        with absolute values (not normalized by area or zone) 
+        to see the contributions of each element to each KPI. 
 
         Parameters
         ----------
@@ -227,43 +229,25 @@ class KPI_Calculator(object):
 
         Returns
         -------
-        analysis : dict
-            Dictionary with other three dictionaries:
-            kpi_cor : dict
-                Dictionary with the core KPIs, i.e., the KPIs
-                that are considered essential for the comparison between
-                two test cases.
-            kpi_ele : dict
-                Nested dictionary with KPIs grouped by element.
-            kpi_src : dict
-                Nested dictionary with KPIs grouped by source for 
-                energy, cost and emissions.  
+        akpi = dict
+            Dictionary with the core KPIs disaggregated and 
+            with absolute values.
 
         '''
 
-        kpi_cor = self.get_core_kpis(price_scenario=price_scenario)
+        _ = self.get_core_kpis(price_scenario=price_scenario)
         
-        kpi_ele = OrderedDict()
-        kpi_ele['tdis_ele'] = self.tdis_dict
-        kpi_ele['idis_ele'] = self.idis_dict 
-        kpi_ele['ener_ele'] = self.ener_dict
-        kpi_ele['cost_ele'] = self.cost_dict
-        kpi_ele['emis_ele'] = self.emis_dict
-        kpi_ele['pele_ele'] = self.pele_dict
-        kpi_ele['pgas_ele'] = self.pgas_dict
-        kpi_ele['pdih_ele'] = self.pdih_dict
+        akpi = OrderedDict()
+        akpi['tdis'] = self.tdis_dict
+        akpi['idis'] = self.idis_dict 
+        akpi['ener'] = self.ener_dict
+        akpi['cost'] = self.cost_dict
+        akpi['emis'] = self.emis_dict
+        akpi['pele'] = self.pele_dict
+        akpi['pgas'] = self.pgas_dict
+        akpi['pdih'] = self.pdih_dict
         
-        kpi_src = OrderedDict()
-        kpi_src['ener_src'] = self.ener_dict_by_source
-        kpi_src['cost_src'] = self.cost_dict_by_source
-        kpi_src['emis_src'] = self.emis_dict_by_source
-
-        analysis = OrderedDict()
-        analysis['kpi_cor'] = kpi_cor
-        analysis['kpi_ele'] = kpi_ele
-        analysis['kpi_src'] = kpi_src
-
-        return analysis
+        return akpi
 
     def get_thermal_discomfort(self):
         '''The thermal discomfort is the integral of the deviation

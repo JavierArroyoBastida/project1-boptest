@@ -790,8 +790,8 @@ class TestCase(object):
         return status, message, payload
 
 
-    def get_analysis(self):
-        '''Returns analysis data.
+    def get_kpis_absolute(self):
+        '''Returns KPIs disaggregated and with absolute values.
 
         Requires standard sensor signals.
 
@@ -808,17 +808,14 @@ class TestCase(object):
         message: str
             Includes detailed debugging information
         payload : dict
-            Dictionary containing dictionaries with core KPIs as well as 
-            KPIs by element (ele) and source (src).
-            {{<kpi_cor_name>:<kpi_cor_value>}, 
-             {<kpi_ele_name>:<kpi_ele_value>}, 
-             {<kpi_src_name>:<kpi_src_value>}}.
+            Dictionary containing KPIs disaggregated and with absolute values.
+            {<kpi_ele_name>:<kpi_ele_value>}
             Returns None if error during calculation.
 
         '''
 
         status = 200
-        message = "Queried analysis successfully."
+        message = "Queried absolute KPIs successfully."
         try:
             # Set correct price scenario for cost
             if self.scenario['electricity_price'] == 'constant':
@@ -828,11 +825,11 @@ class TestCase(object):
             elif self.scenario['electricity_price'] == 'highly_dynamic':
                 price_scenario = 'HighlyDynamic'
             # Calculate the core kpis
-            payload = self.cal.get_analysis(price_scenario=price_scenario)
+            payload = self.cal.get_kpis_absolute(price_scenario=price_scenario)
         except:
             payload = None
             status = 500
-            message = "Failed to query analysis: {}".format(traceback.format_exc())
+            message = "Failed to query absolute KPIs: {}".format(traceback.format_exc())
             logging.error(message)
         logging.info(message)
 
