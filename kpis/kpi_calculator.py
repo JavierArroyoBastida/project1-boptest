@@ -64,6 +64,7 @@ class KPI_Calculator(object):
         self.initialize_kpi_vars('idis')
         self.initialize_kpi_vars('ener')
         self.initialize_kpi_vars('cost')
+        self.initialize_kpi_vars('bill')
         self.initialize_kpi_vars('emis')
         self.initialize_kpi_vars('pele')
         self.initialize_kpi_vars('pgas')
@@ -164,6 +165,29 @@ class KPI_Calculator(object):
                         self.cost_dict[signal] = 0.
                         self.cost_dict_by_source[source+'_'+signal] = 0.
 
+        elif label=='bill':
+            # Initialize sources of bill
+            self.sources_bill = []
+            for source in self.sources:
+                if 'ElectricPower' in source  and \
+                source in self.case.kpi_json.keys():
+                    self.sources_cost.append(source)
+                    for signal in self.case.kpi_json[source]:
+                        self.bill_dict[signal] = 0.
+                        self.bill_dict_by_source[source+'_'+signal] = 0.
+                elif 'Power' in source  and \
+                source in self.case.kpi_json.keys():
+                    self.sources_cost.append(source)
+                    for signal in self.case.kpi_json[source]:
+                        self.bill_dict[signal] = 0.
+                        self.bill_dict_by_source[source+'_'+signal] = 0.
+                elif 'FreshWater' in source  and \
+                source in self.case.kpi_json.keys():
+                    self.sources_cost.append(source)
+                    for signal in self.case.kpi_json[source]:
+                        self.bill_dict[signal] = 0.
+                        self.bill_dict_by_source[source+'_'+signal] = 0.
+
         elif label=='emis':
             # Initialize sources of emissions
             self.sources_emis = []
@@ -207,6 +231,7 @@ class KPI_Calculator(object):
         ckpi['idis_tot'] = self.get_iaq_discomfort()
         ckpi['ener_tot'] = self.get_energy()
         ckpi['cost_tot'] = self.get_cost(scenario=price_scenario)
+        ckpi['bill_tot'] = self.get_bill()
         ckpi['emis_tot'] = self.get_emissions()
         ckpi['pele_tot'] = self.get_peak_electricity()
         ckpi['pgas_tot'] = self.get_peak_gas()
@@ -242,6 +267,7 @@ class KPI_Calculator(object):
         akpi['idis'] = self.idis_dict 
         akpi['ener'] = self.ener_dict
         akpi['cost'] = self.cost_dict
+        akpi['bill'] = self.bill_dict
         akpi['emis'] = self.emis_dict
         akpi['pele'] = self.pele_dict
         akpi['pgas'] = self.pgas_dict
@@ -589,6 +615,60 @@ class KPI_Calculator(object):
         self._set_last_index('cost', set_initial=False)
 
         return self.cost_tot
+    
+    def get_bill(self):
+        '''This method returns the bill for each energy agent in the
+        test case. 
+
+        Notes
+        -----
+        It is assumed that power is measured in Watts and water usage in m3
+
+        '''
+
+        # The following should be self.case.kpi_json
+        # Add an assert in the parser such that every agents has just one associated price
+        kpi_json_fake = {
+            "ElectricPower[house1]": ["house1_reaPow_y"],
+            "ElectricPower[house2]": ["house2_reaPow_y"],
+            "ElectricPower[house3]": ["house3_reaPow_y"],
+            "ElectricPowerPrice[house1]": ["marketModel_ovePri1_u"],
+            "ElectricPowerPrice[house2]": ["marketModel_ovePri2_u"],
+            "ElectricPowerPrice[house3]": ["marketModel_ovePri3_u"]
+        }
+        # The following should be self.sources_cost
+        sources_cost_fake = ["ElectricPower[house1]", "ElectricPower[house2]", "ElectricPower[house3]"]
+        
+        self.bill_tot = 0.
+
+        for source in sources_cost_fake:
+            if 'Power' in source:
+                factor = 2.77778e-7 # Convert to kWh
+            elif 'FreshWater' in source:
+                factor = 1 # No conversion needed
+
+            agent_id = source.split('[')[1][:-1]
+            price_signal = kpi_json_fake[source.split('[')[0]+'Price'+'['+agent_id+']'][0]
+            power_signal = kpi_json_fake[source][0]
+
+            # Calculate bills. Power is a mesurement while prices are inputs in this case 
+            pow_data = np.array(self._get_data_from_last_index(power_signal,self.i_last_bill))
+            pri_data = np.array(self._get_input_from_last_index(price_signal,self.i_last_bill))
+            integral = trapz(np.multiply(pri_data,pow_data),
+                        self._get_data_from_last_index('time',self.i_last_bill))*factor
+            self.bill_dict[power_signal] += integral
+            # self.bill_dict_by_source[source+'_'+power_signal] += integral
+            self.bill_tot = self.bill_tot + self.bill_dict[power_signal]/self.case._get_area() # Normalize total by floor area
+
+        # Assign to case
+        self.case.bill_tot            = self.bill_tot
+        self.case.bill_dict           = self.bill_dict
+        self.case.bill_dict_by_source = self.bill_dict_by_source
+
+        # Update last integration index
+        self._set_last_index('bill', set_initial=False)
+
+        return self.bill_tot
 
     def get_emissions(self):
         '''This method returns the measure of the total building
@@ -704,6 +784,27 @@ class KPI_Calculator(object):
         '''
 
         data=self.case.y_store[point][i:]
+
+        return data
+
+    def _get_input_from_last_index(self,point,i):
+        '''Get input data from last index indicated by i.
+
+        Parameters
+        ----------
+        point: str
+            Name of input to get data for from case.u_store
+        i: int
+            Integer to indicate the first time to get data
+
+        Returns
+        -------
+        data: np array
+            Array of data from key from i onward
+
+        '''
+
+        data=self.case.u_store[point][i:]
 
         return data
 
