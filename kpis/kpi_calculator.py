@@ -171,19 +171,19 @@ class KPI_Calculator(object):
             for source in self.sources:
                 if 'ElectricPower' in source  and \
                 source in self.case.kpi_json.keys():
-                    self.sources_cost.append(source)
+                    self.sources_bill.append(source)
                     for signal in self.case.kpi_json[source]:
                         self.bill_dict[signal] = 0.
                         self.bill_dict_by_source[source+'_'+signal] = 0.
                 elif 'Power' in source  and \
                 source in self.case.kpi_json.keys():
-                    self.sources_cost.append(source)
+                    self.sources_bill.append(source)
                     for signal in self.case.kpi_json[source]:
                         self.bill_dict[signal] = 0.
                         self.bill_dict_by_source[source+'_'+signal] = 0.
                 elif 'FreshWater' in source  and \
                 source in self.case.kpi_json.keys():
-                    self.sources_cost.append(source)
+                    self.sources_bill.append(source)
                     for signal in self.case.kpi_json[source]:
                         self.bill_dict[signal] = 0.
                         self.bill_dict_by_source[source+'_'+signal] = 0.
@@ -636,12 +636,12 @@ class KPI_Calculator(object):
             "ElectricPowerPrice[house2]": ["marketModel_ovePri2_u"],
             "ElectricPowerPrice[house3]": ["marketModel_ovePri3_u"]
         }
-        # The following should be self.sources_cost
-        sources_cost_fake = ["ElectricPower[house1]", "ElectricPower[house2]", "ElectricPower[house3]"]
+        # The following should be self.sources_bill
+        sources_bill_fake = ["ElectricPower[house1]", "ElectricPower[house2]", "ElectricPower[house3]"]
         
         self.bill_tot = 0.
 
-        for source in sources_cost_fake:
+        for source in sources_bill_fake:
             if 'Power' in source:
                 factor = 2.77778e-7 # Convert to kWh
             elif 'FreshWater' in source:
