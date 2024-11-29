@@ -159,11 +159,11 @@ class TestCase(object):
         self.options['initialize'] = self.initialize_fmu
         # Set sample rate
         step = end_time - start_time
-        if step >= 30:
-            self.options['ncp'] = int((end_time-start_time)/30)
+        if step >= 60:
+            self.options['ncp'] = int((end_time-start_time)/60)
         elif step == 0:
             pass
-        elif (step < 30) and (step > 0):
+        elif (step < 60) and (step > 0):
             self.options['ncp'] = int((end_time-start_time)/step)
         # Simulate fmu
         try:
@@ -790,6 +790,52 @@ class TestCase(object):
             payload = None
             status = 500
             message = "Failed to query KPIs: {}".format(traceback.format_exc())
+            logging.error(message)
+        logging.info(message)
+
+        return status, message, payload
+
+
+    def get_kpis_absolute(self):
+        '''Returns KPIs disaggregated and with absolute values.
+
+        Requires standard sensor signals.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        status: int
+            Indicates whether a request for querying the KPIs has been completed.
+            If 200, the KPIs were successfully queried.
+            If 500, an internal error occured.
+        message: str
+            Includes detailed debugging information
+        payload : dict
+            Dictionary containing KPIs disaggregated and with absolute values.
+            {<kpi_ele_name>:<kpi_ele_value>}
+            Returns None if error during calculation.
+
+        '''
+
+        status = 200
+        message = "Queried absolute KPIs successfully."
+        try:
+            # Set correct price scenario for cost
+            if self.scenario['electricity_price'] == 'constant':
+                price_scenario = 'Constant'
+            elif self.scenario['electricity_price'] == 'dynamic':
+                price_scenario = 'Dynamic'
+            elif self.scenario['electricity_price'] == 'highly_dynamic':
+                price_scenario = 'HighlyDynamic'
+            # Calculate the core kpis
+            payload = self.cal.get_kpis_absolute(price_scenario=price_scenario)
+        except:
+            payload = None
+            status = 500
+            message = "Failed to query absolute KPIs: {}".format(traceback.format_exc())
             logging.error(message)
         logging.info(message)
 
